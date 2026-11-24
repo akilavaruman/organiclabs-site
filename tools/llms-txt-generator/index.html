@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free llms.txt Generator &amp; Checker (No Sign-Up) 2026</title>
+<meta name="description" content="Generate a spec-compliant llms.txt from your sitemap, edit it, then validate it. Plus what server-log data says about who actually reads the file.">
+<link rel="canonical" href="./">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Gabarito:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://organiclabs.ai/#organization",
+      "name": "Organic Labs",
+      "url": "https://organiclabs.ai/",
+      "logo": "https://organiclabs.ai/logo.png",
+      "description": "Organic Labs is an independent research publication that runs original research on how search is changing."
+    },
+    {
+      "@type": "WebApplication",
+      "@id": "https://organiclabs.ai/tools/llms-txt-generator#app",
+      "name": "llms.txt Generator and Checker",
+      "url": "https://organiclabs.ai/tools/llms-txt-generator",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "description": "Free llms.txt generator and checker. Builds a curated llms.txt and llms-full.txt from your sitemap, validates the format and links, and tests whether AI crawlers can access your site.",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "publisher": { "@id": "https://organiclabs.ai/#organization" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://organiclabs.ai/" },
+        { "@type": "ListItem", "position": 2, "name": "Free Tools", "item": "https://organiclabs.ai/tools" },
+        { "@type": "ListItem", "position": 3, "name": "llms.txt Generator", "item": "https://organiclabs.ai/tools/llms-txt-generator" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "What is an llms.txt file?", "acceptedAnswer": { "@type": "Answer", "text": "A markdown file at the root of your site (yoursite.com/llms.txt) that gives AI tools a short, curated list of your most important pages with one-line descriptions. It's a community proposal from 2024, not an official standard." } },
+        { "@type": "Question", "name": "Is it llm.txt or llms.txt?", "acceptedAnswer": { "@type": "Answer", "text": "llms.txt, plural. 'llm.txt' is a common misspelling; AI tools that look for the file request /llms.txt." } },
+        { "@type": "Question", "name": "Does llms.txt help me get cited by ChatGPT or Google AI Overviews?", "acceptedAnswer": { "@type": "Answer", "text": "There's no evidence it does. Google says its search products don't use it, and server-log studies show AI search crawlers rarely fetch it. It's most useful for developer docs read by coding agents." } },
+        { "@type": "Question", "name": "Do AI crawlers read llms.txt?", "acceptedAnswer": { "@type": "Answer", "text": "Rarely. Ahrefs found 97% of llms.txt files across 137K domains got zero fetches in May 2026, and OtterlyAI logged 84 llms.txt requests out of 62,100+ AI bot visits." } },
+        { "@type": "Question", "name": "Is this llms.txt generator free?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. No sign-up, up to 500 pages, and llms-full.txt included." } },
+        { "@type": "Question", "name": "How do I check if my llms.txt is valid?", "acceptedAnswer": { "@type": "Answer", "text": "Use the Check tab: it tests the format against the llmstxt.org spec, checks every link, confirms the file is reachable, and tests whether AI crawlers can access your site." } },
+        { "@type": "Question", "name": "What's the difference between llms.txt and llms-full.txt?", "acceptedAnswer": { "@type": "Answer", "text": "llms.txt is a short index of links. llms-full.txt contains the full text of those pages in one file, mainly for documentation." } },
+        { "@type": "Question", "name": "How often should I update llms.txt?", "acceptedAnswer": { "@type": "Answer", "text": "When you add or retire important pages, or about every quarter. Re-run the checker after updates." } },
+        { "@type": "Question", "name": "Should I block AI crawlers or allow them?", "acceptedAnswer": { "@type": "Answer", "text": "Allow the search crawlers (OAI-SearchBot, PerplexityBot, Claude-SearchBot) if you want to appear in AI answers. Training crawlers (GPTBot, ClaudeBot, Google-Extended) are a separate choice." } }
+      ]
+    }
+  ]
+}
+</script>
+
+<style>
+
+:root{
+  --bg:#050505; --surface:#0E0E0E; --surface-2:#141414; --input:#1C1C1C;
+  --line:#2A2A2A; --line-soft:#1E1E1E;
+  --text:#F2F4F8; --body:#C9CBD1; --muted:#9A9CA3; --faint:#6B6E75;
+  --btn:#F5F6FA; --btn-text:#0A0A0A;
+  --err:#F87171; --err-bg:rgba(248,113,113,.08);
+  --warn:#FBBF24; --warn-bg:rgba(251,191,36,.08);
+  --ok:#4ADE80; --ok-bg:rgba(74,222,128,.08);
+  --info:#9A9CA3; --info-bg:rgba(154,156,163,.08);
+  --r-lg:28px; --r-md:14px; --r-sm:10px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--body);font-family:Inter,system-ui,-apple-system,sans-serif;font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased}
+a{color:var(--text);text-underline-offset:3px;text-decoration-color:rgba(242,244,248,.35)}
+a:hover{text-decoration-color:var(--text)}
+h1,h2,h3{font-family:Gabarito,Inter,sans-serif;color:var(--text);letter-spacing:-.02em;line-height:1.15;margin:0}
+code,pre,.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+.narrow{max-width:820px;margin:0 auto}
+
+/* Starfield */
+.stars{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.stars i{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff}
+
+/* Header */
+header.site{position:relative;z-index:5}
+.nav{display:flex;align-items:center;justify-content:space-between;height:84px}
+.logo{font-family:"Bebas Neue",Impact,sans-serif;font-size:34px;letter-spacing:.01em;color:var(--text);text-decoration:none;line-height:1}
+.nav ul{display:flex;gap:40px;list-style:none;margin:0;padding:0}
+.nav ul a{text-decoration:none;color:var(--body);font-size:16px;white-space:nowrap}
+.nav ul a:hover,.nav ul a[aria-current]{color:var(--text)}
+
+/* Hero */
+.hero{position:relative;padding:12px 0 8px}
+.hero .wrap{position:relative;z-index:1}
+.crumbs{font-size:14px;color:var(--muted);margin-bottom:18px}
+.crumbs a{color:var(--muted);text-decoration:none}
+.crumbs a:hover{color:var(--text)}
+.pill{display:inline-block;border:1px solid rgba(242,244,248,.55);border-radius:8px;padding:3px 12px;font-size:15px;color:var(--text);line-height:1.5}
+.hero h1{font-size:clamp(34px,5.4vw,60px);font-weight:700;margin:16px 0 0}
+.hero h1 span{display:block;font-size:clamp(17px,2vw,22px);font-weight:500;color:var(--body);letter-spacing:-.01em;margin-top:10px;line-height:1.35}
+.hero .sub{max-width:760px;margin:14px 0 0;font-size:17px;color:var(--body)}
+
+/* Tool */
+.tool{position:relative;z-index:1;background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--r-lg);padding:26px;margin:26px 0 0}
+.tabs{display:inline-flex;background:var(--input);border:1px solid var(--line);border-radius:12px;padding:4px;gap:4px}
+.tabs button{background:none;border:0;color:var(--muted);font:600 15px Inter,sans-serif;padding:8px 18px;border-radius:9px;cursor:pointer}
+.tabs button[aria-selected=true]{background:var(--btn);color:var(--btn-text)}
+.panel{margin-top:18px}
+.row{display:flex;gap:12px;align-items:stretch}
+.input,textarea,select{width:100%;background:var(--input);border:1px solid var(--line);border-radius:var(--r-sm);color:var(--text);font:16px Inter,sans-serif;padding:15px 16px;outline:none}
+.input:focus,textarea:focus,select:focus{border-color:#5a5d63}
+textarea{font:14px/1.55 "JetBrains Mono",monospace;min-height:190px;resize:vertical}
+select{width:auto;padding:10px 12px;font-size:14px}
+.btn{background:var(--btn);color:var(--btn-text);border:0;border-radius:var(--r-sm);font:600 16px Inter,sans-serif;padding:0 26px;min-height:54px;cursor:pointer;white-space:nowrap}
+.btn:hover{background:#fff}
+.btn-ghost{background:transparent;color:var(--text);border:1px solid var(--line);border-radius:var(--r-sm);font:500 14px Inter,sans-serif;padding:9px 14px;cursor:pointer}
+.btn-ghost:hover{border-color:#5a5d63}
+.examples{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:14px;font-size:14px;color:var(--muted)}
+.chip{background:transparent;border:1px solid var(--line);color:var(--body);border-radius:999px;padding:5px 12px;font:13px Inter,sans-serif;cursor:pointer}
+.chip:hover{border-color:#5a5d63;color:var(--text)}
+.opts{display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:space-between;margin-top:14px;font-size:14px;color:var(--muted)}
+.toggle{display:inline-flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+.toggle input{appearance:none;width:38px;height:22px;background:#2b2b2b;border-radius:999px;position:relative;cursor:pointer;margin:0;transition:.2s}
+.toggle input::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#888;transition:.2s}
+.toggle input:checked{background:var(--btn)}
+.toggle input:checked::after{left:19px;background:#0a0a0a}
+.note{margin-top:14px;padding:14px 16px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--surface-2);font-size:14.5px;color:var(--body)}
+.note b{color:var(--text)}
+.free{font-size:13px;color:var(--faint);margin-top:12px}
+
+/* Results */
+#results{margin-top:26px;display:none}
+.summary{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.stat{background:var(--surface-2);border:1px solid var(--line-soft);border-radius:var(--r-md);padding:14px}
+.stat .n{font:700 26px Gabarito,sans-serif;color:var(--text);line-height:1.1}
+.stat .l{font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.35}
+.stat.e .n{color:var(--err)} .stat.w .n{color:var(--warn)}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 4px}
+.global{margin-top:14px}
+.card{background:var(--surface-2);border:1px solid var(--line-soft);border-radius:18px;margin-top:14px;overflow:hidden}
+.card-h{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:16px 18px;cursor:pointer}
+.card-h h3{font-size:19px}
+.fmt,.loc{font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:2px 8px}
+.loc.js{color:var(--warn);border-color:rgba(251,191,36,.4)}
+.badge{font-size:12px;font-weight:600;border-radius:999px;padding:3px 10px}
+.b-ok{color:var(--ok);background:var(--ok-bg)}
+.b-fix{color:var(--warn);background:var(--warn-bg)}
+.b-dead{color:var(--err);background:var(--err-bg)}
+.b-none{color:var(--info);background:var(--info-bg)}
+.counts{margin-left:auto;font-size:13px;color:var(--muted);display:flex;gap:12px}
+.counts .ce{color:var(--err)} .counts .cw{color:var(--warn)}
+.card-b{padding:0 18px 18px;display:none}
+.card.open .card-b{display:block}
+.chev{transition:.2s;color:var(--muted)}
+.card.open .chev{transform:rotate(90deg)}
+.issue{display:grid;grid-template-columns:auto 1fr;gap:12px;padding:12px 0;border-top:1px solid var(--line-soft)}
+.dot{width:9px;height:9px;border-radius:50%;margin-top:8px}
+.issue.error .dot{background:var(--err)} .issue.warning .dot{background:var(--warn)} .issue.info .dot{background:var(--info)}
+.issue .m{color:var(--text);font-weight:500;font-size:15.5px}
+.issue .m code{font-size:13.5px;background:#1f1f1f;border-radius:5px;padding:1px 5px}
+.issue .y,.issue .f{font-size:14px;color:var(--muted);line-height:1.5}
+.issue .f b,.issue .y b{color:var(--body);font-weight:500}
+.issue .gen{font-size:13.5px;display:inline-block;margin-top:4px}
+.codebar{display:flex;gap:8px;align-items:center;margin:14px 0 8px}
+.codebar span{font-size:12.5px;color:var(--faint);margin-right:auto}
+pre.code{margin:0;background:#0a0a0a;border:1px solid var(--line-soft);border-radius:var(--r-sm);padding:12px 0;font-size:12.5px;line-height:1.6;overflow:auto;max-height:340px;color:#d6d8de}
+pre.code .ln{display:block;padding:0 14px}
+pre.code .ln.hl{background:rgba(248,113,113,.12);box-shadow:inset 3px 0 0 var(--err)}
+pre.code .ln.hw{background:rgba(251,191,36,.10);box-shadow:inset 3px 0 0 var(--warn)}
+.tree{font-size:13px;background:#0a0a0a;border:1px solid var(--line-soft);border-radius:var(--r-sm);padding:12px 14px;max-height:340px;overflow:auto}
+.tree ul{list-style:none;margin:0;padding-left:16px;border-left:1px solid var(--line)}
+.tree>ul{border:0;padding:0}
+.tree li{margin:2px 0}
+.tree .k{color:var(--muted)} .tree .t{color:var(--text);font-weight:600} .tree .v{color:#bfc3cb;word-break:break-all}
+.empty{text-align:center;padding:30px 18px;border:1px dashed var(--line);border-radius:18px;margin-top:14px}
+.empty h3{font-size:20px;margin-bottom:6px}
+.takeaways{margin-top:22px;border:1px solid var(--line);border-radius:18px;padding:18px 22px}
+.takeaways h2{font-size:18px;margin-bottom:6px}
+.takeaways ul{margin:0;padding-left:20px}
+.takeaways li{margin:6px 0;font-size:15.5px}
+.lead{display:grid;grid-template-columns:1.2fr 1fr;gap:14px;margin-top:14px}
+.lead > div{background:var(--surface-2);border:1px solid var(--line-soft);border-radius:18px;padding:20px}
+.lead h3{font-size:18px;margin-bottom:6px}
+.lead p{font-size:14.5px;margin:0 0 12px;color:var(--muted)}
+.lead form .row .btn{min-height:48px;font-size:15px;padding:0 18px}
+.lead .input{padding:12px 14px;font-size:15px}
+.check{display:flex;gap:8px;align-items:center;font-size:13.5px;color:var(--muted);margin-top:10px}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--btn);color:var(--btn-text);font-weight:600;font-size:14px;padding:10px 18px;border-radius:10px;opacity:0;transition:.25s;z-index:50;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* Content */
+main.content{padding:40px 0 20px}
+section.s{padding:56px 0;border-top:1px solid var(--line-soft)}
+section.s h2{font-size:clamp(28px,3.6vw,40px);font-weight:700;margin:14px 0 14px}
+section.s h3{font-size:21px;margin:26px 0 8px}
+.thesis{font-family:Gabarito,sans-serif;font-size:21px;color:var(--text);font-weight:500;margin:0 0 14px;letter-spacing:-.01em}
+section.s p{margin:0 0 14px}
+.takeaway{border-left:2px solid var(--text);padding-left:14px;color:var(--text);font-weight:500;margin-top:18px}
+.tbl{width:100%;border-collapse:separate;border-spacing:0;margin:18px 0 6px;font-size:15px;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.tbl th{font:600 14px Inter,sans-serif;color:var(--text);text-align:left;background:var(--surface-2);padding:12px 14px;border-bottom:1px solid var(--line)}
+.tbl td{padding:12px 14px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+.tbl tr:last-child td{border-bottom:0}
+.tbl td:first-child{color:var(--text)}
+.tbl .yes{color:var(--ok)} .tbl .no{color:var(--err)} .tbl .part{color:var(--warn)}
+.tbl-wrap{overflow-x:auto}
+.stamp{font-size:13.5px;color:var(--muted)}
+ol.steps{counter-reset:s;list-style:none;padding:0;margin:18px 0}
+ol.steps li{counter-increment:s;position:relative;padding:0 0 0 54px;margin:0 0 18px}
+ol.steps li::before{content:counter(s);position:absolute;left:0;top:0;width:36px;height:36px;border:1px solid rgba(242,244,248,.55);border-radius:10px;display:grid;place-items:center;font:600 16px Gabarito,sans-serif;color:var(--text)}
+ol.steps b{color:var(--text)}
+blockquote{margin:22px 0;padding:22px 26px;background:var(--surface);border:1px solid var(--line-soft);border-radius:20px;font:500 22px/1.4 Gabarito,sans-serif;color:var(--text);letter-spacing:-.01em}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+.split > div{background:var(--surface);border:1px solid var(--line-soft);border-radius:18px;padding:20px}
+.split h3{margin:0 0 6px!important;font-size:18px!important}
+.split p{font-size:15.5px;margin:0!important}
+details{border-bottom:1px solid var(--line-soft)}
+details summary{list-style:none;cursor:pointer;padding:18px 36px 18px 0;position:relative;font:600 18px Gabarito,sans-serif;color:var(--text)}
+details summary::-webkit-details-marker{display:none}
+details summary::after{content:"+";position:absolute;right:4px;top:14px;font:400 24px Inter;color:var(--muted)}
+details[open] summary::after{content:"\2212"}
+details p{margin:0 0 18px!important}
+.tools-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+.tcard{display:block;text-decoration:none;background:var(--surface);border:1px solid var(--line-soft);border-radius:20px;padding:20px;transition:.2s}
+.tcard:hover{border-color:var(--line)}
+.tcard h3{font-size:18px!important;margin:10px 0 6px!important}
+.tcard p{font-size:14.5px;color:var(--muted);margin:0!important}
+.soon{font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:1px 8px}
+.cta{position:relative;overflow:hidden;background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--r-lg);padding:44px;display:grid;grid-template-columns:1.4fr 1fr;gap:30px;align-items:center}
+.cta h2{margin-top:0!important}
+.cta svg{width:100%;max-width:260px;justify-self:center;opacity:.9}
+footer.site{border-top:1px solid var(--line-soft);padding:30px 0 50px;margin-top:40px;font-size:14px;color:var(--muted)}
+footer.site .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+footer.site a{color:var(--muted);text-decoration:none;margin-left:22px}
+
+@media (max-width:900px){
+  .summary{grid-template-columns:repeat(3,1fr)}
+  .lead,.cta,.split{grid-template-columns:1fr}
+  .tools-grid{grid-template-columns:1fr 1fr}
+  .cta svg{display:none}
+}
+@media (max-width:620px){
+  body{font-size:16px}
+  .nav{height:68px}.logo{font-size:26px;white-space:nowrap}.nav ul{gap:16px}.nav ul a{font-size:14px}
+  .tool{padding:16px;border-radius:20px;margin-top:18px}
+  .row{flex-direction:column}
+  .btn{width:100%}
+  .summary{grid-template-columns:repeat(2,1fr)}
+  .tools-grid{grid-template-columns:1fr}
+  .cta{padding:26px}
+  .hero .sub{font-size:15.5px}
+  .counts{margin-left:0;width:100%}
+  section.s{padding:44px 0}
+}
+
+/* llms.txt tool additions */
+.adv{margin-top:12px;border:0}
+.adv summary{list-style:none;cursor:pointer;font:500 14px Inter,sans-serif;color:var(--muted);padding:4px 0}
+.adv summary::-webkit-details-marker{display:none}
+.adv summary::before{content:"\25B8  ";color:var(--faint)}
+.adv[open] summary::before{content:"\25BE  "}
+.adv summary::after{content:none}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+.grid2 label,.field label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+.field{margin-top:12px}
+.grid2 .input,.field .input{padding:12px 14px;font-size:15px}
+.field textarea{min-height:120px}
+.optrow{display:flex;flex-wrap:wrap;gap:16px 26px;align-items:center;margin-top:14px;font-size:14px;color:var(--muted)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.seg button{background:none;border:0;color:var(--muted);font:500 13px Inter,sans-serif;padding:6px 12px;cursor:pointer}
+.seg button.on{background:#262626;color:var(--text)}
+.progress{list-style:none;padding:0;margin:16px 0 0;font-size:14.5px}
+.progress li{display:flex;gap:10px;align-items:baseline;padding:4px 0;color:var(--muted)}
+.progress li.done{color:var(--body)}
+.progress li .ic{width:16px;flex:none;text-align:center}
+.progress li.done .ic{color:var(--ok)}
+.out{display:grid;grid-template-columns:300px 1fr;gap:14px;margin-top:16px}
+.struct{background:var(--surface-2);border:1px solid var(--line-soft);border-radius:18px;padding:14px;max-height:560px;overflow:auto}
+.struct h4{font:600 14px Inter,sans-serif;color:var(--text);margin:0 0 8px}
+.sec{border:1px solid var(--line-soft);border-radius:12px;padding:8px 10px;margin-bottom:8px;background:#101010}
+.sec-h{display:flex;align-items:center;gap:6px}
+.sec-h b{color:var(--text);font-size:14px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ib{background:none;border:1px solid var(--line);color:var(--muted);border-radius:6px;font-size:12px;width:24px;height:24px;cursor:pointer;line-height:1}
+.ib:hover{color:var(--text);border-color:#5a5d63}
+.lk{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--body);padding:3px 0 3px 4px}
+.lk span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lk .ib{width:20px;height:20px;font-size:11px}
+.addlink{display:flex;gap:6px;margin-top:6px}
+.addlink input{flex:1;background:var(--input);border:1px solid var(--line);border-radius:7px;color:var(--text);font:12.5px Inter,sans-serif;padding:5px 8px;min-width:0}
+.ed{background:var(--surface-2);border:1px solid var(--line-soft);border-radius:18px;padding:14px;display:flex;flex-direction:column;min-width:0}
+.ed-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.ed-bar .seg{margin-right:auto}
+.ed textarea{min-height:420px;flex:1;background:#0a0a0a;border-color:var(--line-soft)}
+.preview{background:#0a0a0a;border:1px solid var(--line-soft);border-radius:var(--r-sm);padding:16px 18px;min-height:420px;max-height:560px;overflow:auto;font-size:14.5px}
+.preview h1{font-size:26px;margin:0 0 10px}
+.preview h2{font-size:18px;margin:18px 0 6px}
+.preview blockquote{font:400 14.5px/1.6 Inter,sans-serif;color:var(--body);padding:8px 14px;margin:0 0 10px;border-radius:0;border:0;border-left:2px solid var(--text);background:none}
+.preview ul{margin:0;padding-left:18px}
+.preview li{margin:3px 0}
+.preview p{margin:0 0 10px}
+.meta{font-size:12.5px;color:var(--faint);margin-top:8px}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.btn-sm{min-height:42px;font-size:14.5px;padding:0 16px}
+.platform{margin-top:14px;background:var(--surface-2);border:1px solid var(--line-soft);border-radius:18px;padding:16px 18px}
+.platform h4{font:600 15px Inter,sans-serif;color:var(--text);margin:0 0 6px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.platform ol{margin:6px 0 0;padding-left:20px;font-size:14.5px}
+.platform li{margin:4px 0}
+.dropped{font-size:13.5px;color:var(--muted);margin-top:6px}
+.chk{display:grid;grid-template-columns:auto 1fr;gap:12px;padding:11px 0;border-top:1px solid var(--line-soft)}
+.chk:first-child{border-top:0}
+.pill-s{font-size:11.5px;font-weight:600;border-radius:999px;padding:2px 9px;margin-top:3px;white-space:nowrap;min-width:52px;text-align:center}
+.s-pass{color:var(--ok);background:var(--ok-bg)} .s-warn{color:var(--warn);background:var(--warn-bg)} .s-fail{color:var(--err);background:var(--err-bg)} .s-na{color:var(--info);background:var(--info-bg)}
+.chk .m{color:var(--text);font-size:15px;font-weight:500}
+.chk .f{font-size:13.5px;color:var(--muted)}
+.bots{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:6px}
+.bots td,.bots th{padding:7px 8px;border-top:1px solid var(--line-soft);text-align:left}
+.bots th{color:var(--muted);font-weight:500;font-size:12.5px}
+.bots td:first-child{color:var(--text);font-family:"JetBrains Mono",monospace;font-size:12.5px}
+.summary.s4{grid-template-columns:repeat(4,1fr)}
+.stat .n.pass{color:var(--ok)} .stat .n.warn{color:var(--warn)} .stat .n.fail{color:var(--err)} .stat .n.na{color:var(--muted)}
+.checklist{list-style:none;padding:0;margin:10px 0 14px}
+.checklist li{padding-left:28px;position:relative;margin:7px 0}
+.checklist li::before{position:absolute;left:0;top:0;font-weight:600}
+.checklist.yes li::before{content:"\2713";color:var(--ok)}
+.checklist.fix li::before{content:"!";color:var(--warn);left:6px}
+pre.ex{background:var(--surface);border:1px solid var(--line-soft);border-radius:16px;padding:18px 20px;font-size:13px;line-height:1.65;color:#d6d8de;overflow:auto;margin:16px 0}
+@media (max-width:900px){.out{grid-template-columns:1fr}.struct{max-height:300px}.summary.s4{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:620px){.grid2{grid-template-columns:1fr}.ed textarea,.preview{min-height:300px}}
+
+@media (max-width:440px){.nav ul li:nth-child(2){display:none}.nav ul{gap:14px}}
+
+/* ===== Organic Labs site theme (matched to organiclabs.ai computed styles) ===== */
+:root{--bg:#050505;--surface:rgba(255,255,255,.03);--surface-2:rgba(255,255,255,.035);--input:#202020;--line:#2A2A31;--line-soft:#18181D;--text:#F1F5F9;--body:#BFC4CA;--muted:#9EA3AB;--faint:#6E737B;--btn:#F1F5F9;--btn-text:#050505;--pill-bg:#15151B;--pill-line:#8788AA}
+body{background:#050505;color:var(--body);font-family:Gabarito,Inter,system-ui,sans-serif;font-size:18px;line-height:1.6}
+h1,h2,h3,h4,h5{font-family:Gabarito,Inter,sans-serif;font-weight:500;color:var(--text)}
+.wrap{max-width:1160px}
+.nav{height:88px}
+.logo{font-size:28px;letter-spacing:.28px;color:var(--text)}
+.nav ul{gap:40px}
+.nav ul a{font:500 14px Inter,sans-serif;color:var(--body)}
+.nav ul a:hover,.nav ul a[aria-current]{color:var(--text)}
+/* hero: centred like the homepage */
+.hero{padding:48px 0 0;text-align:center}
+.hero .crumbs{font:14px Inter,sans-serif;margin-bottom:22px}
+.pill{font:400 16px/1.2 Inter,sans-serif;color:var(--text);background:var(--pill-bg);border:1px solid var(--pill-line);border-radius:7px;padding:4px 8px}
+.hero h1{font-size:clamp(38px,5.2vw,72px);font-weight:500;letter-spacing:-2px;line-height:1.2;max-width:1000px;margin:20px auto 0}
+.hero h1 span{font-size:clamp(18px,2vw,24px);font-weight:400;letter-spacing:-.3px;color:var(--body);margin-top:14px;line-height:1.35}
+.hero .sub{font-size:18px;line-height:1.55;color:var(--body);max-width:780px;margin:20px auto 0}
+.status,.tk-top{margin-left:auto;margin-right:auto;text-align:left}
+/* tool card */
+.tool{text-align:left;background:var(--surface);border:1px solid rgba(255,255,255,.06);border-radius:24px;margin-top:44px;padding:28px}
+.tool,.tool input,.tool textarea,.tool select,.tool button{font-family:Inter,sans-serif}
+.tabs{background:var(--pill-bg);border:1px solid var(--line);border-radius:12px}
+.tabs button{font:500 14px Inter,sans-serif;color:var(--body)}
+.tabs button[aria-selected=true]{background:var(--btn);color:var(--btn-text)}
+.btn{background:var(--btn);color:var(--btn-text);font:600 14px Inter,sans-serif;border-radius:10px;min-height:48px;padding:0 20px}
+.btn:hover{background:#fff}
+.btn-ghost{font-family:Inter,sans-serif;border-radius:10px}
+.input,textarea,select{background:var(--input);border:1px solid transparent;border-radius:10px;color:var(--text)}
+.input::placeholder,textarea::placeholder{color:#999}
+.input:focus,textarea:focus,select:focus{border-color:#3A3A44}
+.chip{font-family:Inter,sans-serif}
+.takeaways{text-align:left;background:var(--surface);border:1px solid rgba(255,255,255,.06);border-radius:24px;padding:24px 28px;margin-top:20px}
+.takeaways h2{font-size:22px}
+.takeaways li{font-size:17px}
+.lead > div,.card,.stat,.fs,.qa,.ocard,.struct,.ed,.platform,.pvwrap,.codewrap,.sec,.oc,.opt{border-radius:18px}
+/* content sections: centred label + heading, readable body column */
+main.content{padding:24px 0 0}
+section.s{padding:96px 0 0;border-top:0}
+section.s > .pill{display:table;margin:0 auto}
+section.s > h2{text-align:center;font-size:clamp(32px,4vw,48px);font-weight:500;letter-spacing:-1px;line-height:1.2;margin:18px auto 14px;max-width:860px}
+section.s > .thesis{text-align:center;font:400 20px/1.5 Gabarito,sans-serif;color:var(--body);max-width:680px;margin:0 auto 32px}
+section.s p,section.s li{font-size:18px;line-height:1.65}
+section.s h3{font-size:24px;font-weight:500;letter-spacing:-.4px}
+.takeaway{border-left:2px solid var(--pill-line);font-weight:500}
+blockquote{font:500 26px/1.35 Gabarito,sans-serif;letter-spacing:-.4px;background:var(--surface);border:0;border-radius:24px;text-align:center;padding:30px 34px}
+.tbl{border-color:var(--line);border-radius:18px;font-family:Inter,sans-serif;font-size:15px}
+.tbl th{background:var(--pill-bg);font-family:Inter,sans-serif}
+.split > div,.ba > div,.tcard,pre.ex,.pxdemo,.anat{background:var(--surface);border:1px solid rgba(255,255,255,.05);border-radius:24px}
+.tcard h3{font-size:24px!important;letter-spacing:-.4px}
+.tcard p{font-size:16px}
+.soon{font-family:Inter,sans-serif;background:var(--pill-bg);border:1px solid var(--pill-line);border-radius:7px;color:var(--text)}
+/* numbered steps like the homepage's 01 / 02 cards */
+ol.steps li{padding-left:64px}
+ol.steps li::before{content:counter(s,decimal-leading-zero);border:0;width:auto;height:auto;display:block;font:500 24px Gabarito,sans-serif;color:var(--text);top:-2px}
+details summary{font:500 22px/1.35 Gabarito,sans-serif;letter-spacing:-.3px;padding:22px 40px 22px 0}
+details p{font-size:18px}
+/* CTA: centred block like the homepage newsletter */
+.cta{grid-template-columns:1fr;text-align:center;background:var(--surface);border:1px solid rgba(255,255,255,.05);border-radius:24px;padding:56px 40px}
+.cta > div > .pill{display:table;margin:0 auto}
+.cta h2{max-width:760px;margin-left:auto;margin-right:auto}
+.cta p{max-width:680px;margin-left:auto;margin-right:auto}
+.cta svg{display:none}
+/* newsletter + footer copied from the homepage */
+.news{padding:120px 0 96px;text-align:center}
+.news-ic{width:56px;height:56px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;margin:0 auto 22px;box-shadow:0 0 0 6px rgba(255,255,255,.02)}
+.news h2{font-size:clamp(30px,4vw,48px);font-weight:500;letter-spacing:-1px;line-height:1.2;margin:0}
+.news > .wrap > p{font:400 18px Inter,sans-serif;color:var(--text);margin:16px 0 30px}
+.news form{max-width:780px;margin:0 auto;text-align:left}
+.news label{display:block;font:400 18px Gabarito,sans-serif;color:var(--body);margin-bottom:10px}
+.news .row{display:flex;gap:10px}
+.news .input{padding:0 14px;height:48px;font:14px Inter,sans-serif}
+.news-msg{font:14px Inter,sans-serif;color:var(--muted);margin:10px 0 0;min-height:1em}
+footer.site{border-top:1px solid var(--line-soft);padding:48px 0 40px;margin-top:0;font:14px Inter,sans-serif}
+footer.site .wrap{display:block}
+.fcols{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.fcols h4{font:500 14px Gabarito,sans-serif;color:var(--text);margin:0 0 14px}
+.fcols a{display:block;margin:0 0 10px;color:var(--body);text-decoration:none;font:400 14px Inter,sans-serif}
+.fcols a:hover{color:var(--text)}
+.fbottom{display:flex;justify-content:space-between;align-items:center;margin-top:56px;flex-wrap:wrap;gap:12px}
+.fbottom .logo{font-size:24px}
+.fbottom span{color:rgba(213,219,230,.62)}
+@media (max-width:900px){.fcols{grid-template-columns:1fr 1fr}}
+@media (max-width:620px){.hero{padding-top:28px}.hero h1{letter-spacing:-1px}.tool{padding:16px;border-radius:20px}section.s{padding-top:72px}.news .row{flex-direction:column}.news{padding:80px 0 64px}.cta{padding:36px 22px}blockquote{font-size:21px}}
+
+.wrap.narrow{max-width:820px}
+section.s h2{font-weight:500}
+section.s .cta h2{max-width:760px;margin:18px auto 14px;font-size:clamp(28px,3.6vw,44px);letter-spacing:-1px}
+section.s .cta p{max-width:680px;margin:0 auto 22px}
+footer.site a{margin-left:0}
+@media (max-width:620px){.nav ul{gap:16px}.nav ul a{font-size:13.5px}.logo{font-size:24px}}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <a class="logo" href="https://organiclabs.ai/">ORGANIC LABS</a>
+    <nav aria-label="Main">
+      <ul>
+        <li><a href="https://organiclabs.ai/research">Research</a></li>
+        <li><a href="../" aria-current="page">Free Tools</a></li>
+        <li><a href="https://organiclabs.ai/#about">About Us</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="stars" id="stars"></div>
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="https://organiclabs.ai/">Home</a> / <a href="../">Free Tools</a> / llms.txt Generator</nav>
+    <span class="pill">Free Tool</span>
+    <h1>Free llms.txt Generator and Checker<span>With an Honest Answer on Whether You Need One</span></h1>
+    <p class="sub">Enter your domain. We read your sitemap, pick the pages that matter, and write a clean llms.txt you can edit before download. Then check it, and see if AI crawlers can reach your site at all. Free, no sign-up.</p>
+
+    <div class="tool" id="tool">
+      <div class="tabs" role="tablist" aria-label="Mode">
+        <button role="tab" aria-selected="true" data-tab="gen" id="tab-gen">Generate</button>
+        <button role="tab" aria-selected="false" data-tab="chk" id="tab-chk">Check an existing file</button>
+      </div>
+
+      <!-- GENERATE -->
+      <div class="panel" id="panel-gen" role="tabpanel" aria-labelledby="tab-gen">
+        <form id="form-gen" class="row" novalidate>
+          <label for="domain" style="position:absolute;left:-9999px">Domain for the llms.txt generator</label>
+          <input class="input" id="domain" placeholder="yoursite.com" autocomplete="url">
+          <button class="btn" type="submit">Generate llms.txt</button>
+        </form>
+        <div class="examples">Try an example: <button class="chip" id="ex-gen">acmeflow.io (sample B2B SaaS site)</button></div>
+
+        <details class="adv" id="adv">
+          <summary>Advanced: paste a sitemap or URL list, name, description, page limit</summary>
+          <div class="field">
+            <label for="urls">Sitemap XML or URL list (one per line; optional "URL | Title | Description")</label>
+            <textarea id="urls" class="input" spellcheck="false" placeholder="https://yoursite.com/pricing | Pricing | Plans and prices for teams of every size&#10;https://yoursite.com/docs/getting-started&#10;...or paste the contents of sitemap.xml"></textarea>
+          </div>
+          <div class="grid2">
+            <div><label for="sitename">Site name</label><input class="input" id="sitename" placeholder="Detected from your homepage"></div>
+            <div><label for="sitedesc">One-line description (override)</label><input class="input" id="sitedesc" placeholder="Detected from your meta description"></div>
+            <div><label for="maxp">Max pages (free up to 500)</label><input class="input" id="maxp" type="number" min="10" max="500" value="150"></div>
+            <div><label for="blogcap">Max blog posts</label><input class="input" id="blogcap" type="number" min="0" max="200" value="20"></div>
+          </div>
+        </details>
+
+        <div class="optrow">
+          <span>Group pages by
+            <span class="seg" id="groupby"><button type="button" class="on" data-v="type">Page type</button><button type="button" data-v="folder">URL folder</button></span>
+          </span>
+          <label class="toggle"><input type="checkbox" id="opt-optional" checked> Add "Optional" section</label>
+          <label class="toggle"><input type="checkbox" id="opt-full" checked> Include llms-full.txt</label>
+        </div>
+        <div class="note" id="gen-note" hidden></div>
+        <ol class="progress" id="progress" hidden></ol>
+        <div id="gen-out"></div>
+      </div>
+
+      <!-- CHECK -->
+      <div class="panel" id="panel-chk" role="tabpanel" aria-labelledby="tab-chk" hidden>
+        <form id="form-chk" class="row" novalidate>
+          <label for="chk-domain" style="position:absolute;left:-9999px">Domain to check with the llms.txt checker</label>
+          <input class="input" id="chk-domain" placeholder="yoursite.com (we fetch /llms.txt)">
+          <button class="btn" type="submit">Check llms.txt</button>
+        </form>
+        <div class="examples">Try an example: <button class="chip" id="ex-chk">acmeflow.io</button></div>
+        <details class="adv" id="chk-adv">
+          <summary>Or paste your file (and robots.txt) to validate it here</summary>
+          <div class="field"><label for="chk-file">llms.txt contents</label><textarea id="chk-file" class="input" spellcheck="false" placeholder="# Your Company&#10;&#10;> One-line summary&#10;&#10;## Docs&#10;- [Getting started](https://yoursite.com/docs/start): Install and first steps"></textarea></div>
+          <div class="field"><label for="chk-robots">robots.txt contents (optional, for the AI access check)</label><textarea id="chk-robots" class="input" spellcheck="false" style="min-height:90px" placeholder="User-agent: *&#10;Allow: /"></textarea></div>
+          <button class="btn btn-sm" id="chk-paste-go" type="button" style="margin-top:12px">Validate pasted file</button>
+        </details>
+        <div class="note" id="chk-note" hidden></div>
+      </div>
+
+      <p class="free">Free llms.txt generator, checker and validator. No sign-up, up to 500 pages, llms-full.txt included. We don't store your file or URL list. Up to 20 runs per hour.</p>
+
+      <div id="results" aria-live="polite"></div>
+    </div>
+
+    <div class="takeaways" id="takeaways" hidden>
+      <h2>Key Takeaways</h2>
+      <ul id="tk"></ul>
+    </div>
+  </div>
+</section>
+
+<main class="content">
+  <div class="wrap narrow">
+
+    <section class="s" id="what-is">
+      <span class="pill">Basics</span>
+      <h2>What Is llms.txt? (And Is It llm.txt?)</h2>
+      <p class="thesis">A short, curated map of your site, written for AI tools.</p>
+      <p>llms.txt is a markdown file that sits at yoursite.com/llms.txt. It lists your most important pages, each with a one-line description. AI tools can read it to find the pages that matter without crawling the whole site.</p>
+      <p>Jeremy Howard proposed the format in September 2024 at <a href="https://llmstxt.org/" rel="noopener">llmstxt.org</a>. It is a community proposal, not a standard. No standards body such as the W3C or IETF has adopted it, and no major AI provider has committed to reading it.</p>
+      <p>People often search for llm.txt. The file is llms.txt, plural. Tools that look for it request /llms.txt, so a file named llm.txt won't be found.</p>
+    </section>
+
+    <section class="s" id="who-reads-it">
+      <span class="pill">Research</span>
+      <h2>Who Actually Reads llms.txt? What the Data Says</h2>
+      <p class="thesis">Publishing the file is easy. Getting anything to read it is the hard part.</p>
+      <p>Most llms.txt generators promise AI citations and "future-proofing". Server logs tell a different story. When researchers count actual requests to /llms.txt, they find very few, and most of those come from generic bots rather than AI search crawlers.</p>
+      <p class="stamp">Last checked: 19 November 2026.</p>
+      <div class="tbl-wrap"><table class="tbl">
+        <thead><tr><th>Source</th><th>Finding</th></tr></thead>
+        <tbody>
+          <tr><td>Ahrefs, 137K domains (May 2026)</td><td>28% publish llms.txt. 97% of those files got zero fetches in the month. 96% of the requests that did arrive came from bots.</td></tr>
+          <tr><td>OtterlyAI, 90-day log test</td><td>84 of 62,100+ AI bot visits touched llms.txt (about 0.1%).</td></tr>
+          <tr><td>Google (John Mueller)</td><td>Not used for Search. Mueller described it as "not done for search" and closer to a stopgap for AI coding tools.</td></tr>
+          <tr><td>Google's <a href="https://developers.google.com/search/docs/appearance/ai-features" rel="noopener">AI features guidance</a></td><td>You don't need new machine-readable files or AI text files to appear in generative AI search.</td></tr>
+        </tbody>
+      </table></div>
+      <p><b style="color:var(--text)">Where it does help.</b> Developer docs and API references. Coding agents and AI developer tools are the readers most likely to look for the file. If you run a docs site, an llms.txt (and llms-full.txt) is a reasonable courtesy to them.</p>
+      <p><b style="color:var(--text)">Our take.</b> The file is cheap to publish and won't hurt, so this tool makes it painless. It isn't an AI visibility lever. Two things decide whether AI systems can use your site: crawler access in robots.txt, and content that exists in the server HTML. The <a href="https://vercel.com/blog/the-rise-of-the-ai-crawler" rel="noopener">Vercel and MERJ crawl study</a> found major AI crawlers don't run JavaScript. That's why our checker tests both. For what does move AI visibility, see <a href="https://organiclabs.ai/research/llm-search-meta-analysis">our 19-study meta-analysis</a> and <a href="https://organiclabs.ai/research/how-consistent-are-llms">our 12,000-run consistency study</a>.</p>
+      <blockquote>"An llms.txt file is a welcome mat. It doesn't matter if the door is locked."</blockquote>
+    </section>
+
+    <section class="s" id="should-you">
+      <span class="pill">30-Second Check</span>
+      <h2>Should You Add llms.txt to Your Site? A 30-Second Check</h2>
+      <p class="thesis">Ship it if it's quick. Fix access first if it isn't.</p>
+      <p><b style="color:var(--text)">It's worth adding if:</b></p>
+      <ul class="checklist yes">
+        <li>You have developer docs or an API reference.</li>
+        <li>You want a curated page map for AI agents and assistants.</li>
+        <li>It takes you minutes, not a sprint.</li>
+      </ul>
+      <p><b style="color:var(--text)">Fix these first if:</b></p>
+      <ul class="checklist fix">
+        <li>Your robots.txt blocks AI search bots such as OAI-SearchBot or PerplexityBot.</li>
+        <li>Your key content only renders with JavaScript.</li>
+        <li>Your site sits behind a bot challenge that turns crawlers away.</li>
+      </ul>
+      <p>Run the <a href="#tool" data-goto="chk">checker above</a>. It tests all three.</p>
+    </section>
+
+    <section class="s" id="vs">
+      <span class="pill">Comparison</span>
+      <h2>llms.txt vs robots.txt vs sitemap.xml</h2>
+      <p class="thesis">Three files, three jobs, very different readers.</p>
+      <p>robots.txt tells crawlers where they may go. sitemap.xml tells search engines which URLs exist. llms.txt tells AI tools which pages matter most and what each one covers. The first two are read by every major crawler. The third is read mostly by AI coding tools and agents, and rarely by AI search crawlers.</p>
+      <div class="tbl-wrap"><table class="tbl">
+        <thead><tr><th></th><th>robots.txt</th><th>sitemap.xml</th><th>llms.txt</th></tr></thead>
+        <tbody>
+          <tr><td>Purpose</td><td>Crawl rules</td><td>List of URLs to index</td><td>Curated map with descriptions</td></tr>
+          <tr><td>Format</td><td>Plain directives</td><td>XML</td><td>Markdown</td></tr>
+          <tr><td>Read by</td><td>All major crawlers</td><td>Search engines</td><td>Mostly AI coding tools and agents; rarely AI search crawlers</td></tr>
+          <tr><td>Affects Google Search</td><td class="yes">Yes (crawling)</td><td class="yes">Yes (discovery)</td><td class="no">No</td></tr>
+          <tr><td>Required?</td><td>Strongly advised</td><td>Advised</td><td>Optional</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="s" id="format">
+      <span class="pill">Format</span>
+      <h2>llms.txt Format, With an Example</h2>
+      <p class="thesis">One title, one summary, a few sections of links.</p>
+      <p>The <a href="https://llmstxt.org/" rel="noopener">llmstxt.org</a> spec is short. Follow these rules and any tool that reads the file can parse it:</p>
+      <ul>
+        <li>Start with exactly one H1: your site or product name.</li>
+        <li>Add a blockquote with a one-line summary of what you do.</li>
+        <li>Group links under H2 sections, such as Docs, Product or Research.</li>
+        <li>Write each link as <code>- [Title](URL): description</code>.</li>
+        <li>Keep descriptions under about 15 words, and use absolute URLs.</li>
+        <li>Put low-priority links in a final section called <code>Optional</code>. Tools with limited context can skip it.</li>
+      </ul>
+      <p>Here is a short example for a B2B SaaS company:</p>
+<pre class="ex"># AcmeFlow
+
+&gt; AcmeFlow automates revenue operations workflows for B2B SaaS teams.
+
+AcmeFlow connects your CRM, billing and support tools so RevOps teams can automate handoffs without code.
+
+## Docs
+- [Getting started](https://www.acmeflow.io/docs/getting-started): Connect your CRM and build a first workflow
+- [API reference](https://www.acmeflow.io/docs/api): REST endpoints, authentication and rate limits
+
+## Product
+- [Workflow builder](https://www.acmeflow.io/product/workflow-builder): Drag-and-drop automation across CRM, billing and support
+- [Integrations](https://www.acmeflow.io/integrations): Salesforce, HubSpot, Stripe, Zendesk and 40 more
+
+## Pricing
+- [Pricing](https://www.acmeflow.io/pricing): Plans from $49 per month, billed annually
+
+## Research
+- [State of RevOps 2026](https://www.acmeflow.io/research/state-of-revops-2026): Survey of 600 RevOps leaders on tooling and headcount
+
+## Optional
+- [Privacy policy](https://www.acmeflow.io/legal/privacy)
+- [Careers](https://www.acmeflow.io/careers)</pre>
+      <p class="takeaway">If a page wouldn't make your top 30, it doesn't belong in llms.txt.</p>
+    </section>
+
+    <section class="s" id="llms-full">
+      <span class="pill">llms-full.txt</span>
+      <h2>What Is llms-full.txt?</h2>
+      <p class="thesis">The index is llms.txt. The book is llms-full.txt.</p>
+      <p>llms-full.txt is a single file that holds the full text of your key pages in markdown. It's mainly useful for documentation, where a coding agent can load your whole docs set in one request. Include only pages you are happy for AI tools to ingest whole. The file can get large, so keep marketing pages out. Many generators charge for llms-full.txt. Ours includes it free.</p>
+    </section>
+
+    <section class="s" id="install">
+      <span class="pill">Install</span>
+      <h2>How to Add llms.txt to Your Website</h2>
+      <p class="thesis">The file must live at the root of your domain.</p>
+      <p>Tools look for the file at exactly yoursite.com/llms.txt. Serve it as plain text (text/plain or text/markdown) and make sure it returns a 200 status without a login or bot challenge. Some platforms make root files easy. Others need a workaround, and we say so plainly.</p>
+      <div class="tbl-wrap"><table class="tbl">
+        <thead><tr><th>Platform</th><th>How to add llms.txt</th></tr></thead>
+        <tbody>
+          <tr><td>WordPress</td><td>Upload to the site root via SFTP or your host's file manager. Some SEO plugins, such as Yoast, can generate one for you.</td></tr>
+          <tr><td>Shopify</td><td>No direct root uploads. Upload the file under Content &gt; Files, then add a URL redirect from /llms.txt, or use an app that serves it.</td></tr>
+          <tr><td>Webflow</td><td>No root file uploads. Host the file as an asset and redirect /llms.txt to it, or serve it through a proxy such as a Cloudflare Worker.</td></tr>
+          <tr><td>Next.js</td><td>Put llms.txt in the /public folder and redeploy.</td></tr>
+          <tr><td>Nuxt</td><td>Put llms.txt in the /public folder and redeploy.</td></tr>
+          <tr><td>Framer</td><td>Root files aren't supported directly. Use a redirect or a proxy in front of the site.</td></tr>
+          <tr><td>Static site / cPanel</td><td>Upload to public_html (or your web root).</td></tr>
+        </tbody>
+      </table></div>
+      <p>A redirect works for most tools, but a file served directly at the root is safer. Then <a href="#tool" data-goto="chk">run the checker</a> to confirm it's live.</p>
+    </section>
+
+    <section class="s" id="is-anything-reading">
+      <span class="pill">Logs</span>
+      <h2>How to Tell If Anything Is Reading Your llms.txt</h2>
+      <p class="thesis">Your logs know. The hype doesn't.</p>
+      <p>Open your server logs or CDN analytics (Cloudflare, Vercel, Netlify or your host). Filter requests to the path /llms.txt. Then group them by user agent, so you can see which tools made each request. Look for AI agents and assistants, such as ChatGPT-User or Claude-User, and coding tools. Review the numbers once a month.</p>
+      <p>Expect very little. Most llms.txt files get no fetches at all in a given month. Treat any agent traffic as a bonus, not a target. If you want AI visibility, the requests that matter are crawlers fetching your actual pages.</p>
+      <p>We use this generator for our own site. You can see the result at <a href="https://organiclabs.ai/llms.txt">organiclabs.ai/llms.txt</a>.</p>
+    </section>
+
+    <section class="s" id="checker">
+      <span class="pill">Checker</span>
+      <h2>llms.txt Checker and Validator: What It Tests</h2>
+      <p class="thesis">A valid file on an unreachable site is still invisible.</p>
+      <p>The Check tab works as an llms.txt validator and a site access check in one. It tests four things:</p>
+      <ul>
+        <li><b style="color:var(--text)">Format:</b> one H1 first, a blockquote summary, H2 sections, valid markdown links with absolute URLs, no HTML, a sensible file size, and the right content type.</li>
+        <li><b style="color:var(--text)">Links:</b> every URL returns 200 without redirects, isn't noindex or blocked by robots.txt, and isn't a duplicate.</li>
+        <li><b style="color:var(--text)">Reachability:</b> the file returns 200 at the root and isn't behind a login or bot challenge.</li>
+        <li><b style="color:var(--text)">AI access:</b> robots.txt rules for GPTBot, OAI-SearchBot, ChatGPT-User, ClaudeBot, Claude-SearchBot, PerplexityBot, Google-Extended and Applebot-Extended, plus whether your main content is in the raw HTML.</li>
+      </ul>
+    </section>
+
+    <section class="s" id="faqs">
+      <span class="pill">FAQs</span>
+      <h2>FAQs</h2>
+      <details><summary>What is an llms.txt file?</summary><p>A markdown file at the root of your site (yoursite.com/llms.txt) that gives AI tools a short, curated list of your most important pages with one-line descriptions. It's a community proposal from 2024, not an official standard.</p></details>
+      <details><summary>Is it llm.txt or llms.txt?</summary><p>llms.txt, plural. "llm.txt" is a common misspelling; AI tools that look for the file request /llms.txt.</p></details>
+      <details><summary>Does llms.txt help me get cited by ChatGPT or Google AI Overviews?</summary><p>There's no evidence it does. Google says its search products don't use it, and server-log studies show AI search crawlers rarely fetch it. It's most useful for developer docs read by coding agents.</p></details>
+      <details><summary>Do AI crawlers read llms.txt?</summary><p>Rarely. Ahrefs found 97% of llms.txt files across 137K domains got zero fetches in May 2026, and OtterlyAI logged 84 llms.txt requests out of 62,100+ AI bot visits.</p></details>
+      <details><summary>Is this llms.txt generator free?</summary><p>Yes. No sign-up, up to 500 pages, and llms-full.txt included.</p></details>
+      <details><summary>How do I check if my llms.txt is valid?</summary><p>Use the Check tab: it tests the format against the llmstxt.org spec, checks every link, confirms the file is reachable, and tests whether AI crawlers can access your site.</p></details>
+      <details><summary>What's the difference between llms.txt and llms-full.txt?</summary><p>llms.txt is a short index of links. llms-full.txt contains the full text of those pages in one file, mainly for documentation.</p></details>
+      <details><summary>How often should I update llms.txt?</summary><p>When you add or retire important pages, or about every quarter. Re-run the checker after updates.</p></details>
+      <details><summary>Should I block AI crawlers or allow them?</summary><p>Allow the search crawlers (OAI-SearchBot, PerplexityBot, Claude-SearchBot) if you want to appear in AI answers. Training crawlers (GPTBot, ClaudeBot, Google-Extended) are a separate choice.</p></details>
+    </section>
+
+    <section class="s" id="related-tools">
+      <span class="pill">Free Tools</span>
+      <h2>Related Free Tools</h2>
+      <div class="tools-grid">
+        <a class="tcard" href="../schema-validator/"><span class="soon">Live</span><h3>Schema Markup Validator</h3><p>Check structured data, 2026 rich result status and what AI crawlers see.</p></a>
+        <a class="tcard" href="../"><span class="soon">Planned</span><h3>Robots.txt Generator with AI Bots</h3><p>Choose which AI search and training crawlers can access your site.</p></a>
+        <a class="tcard" href="../"><span class="soon">Planned</span><h3>AI Crawler Access Checker</h3><p>See whether GPTBot, ClaudeBot and others can reach your pages.</p></a>
+        <a class="tcard" href="../"><span class="soon">Planned</span><h3>Page Extractability Checker</h3><p>Check how easily AI systems can lift answers from your page.</p></a>
+      </div>
+    </section>
+
+    <section class="s" id="audit">
+      <div class="cta">
+        <div>
+          <span class="pill">Work With Us</span>
+          <h2>Want to Know Why AI Isn't Recommending You?</h2>
+          <p>llms.txt is the easy part. <a href="https://organiclabs.ai/research">Our research</a> shows what actually moves AI visibility: crawler access, server-rendered content and pages built to be quoted. We apply it to B2B SaaS sites. If it's a fit, we'll show you what to fix first.</p>
+          <a class="btn" style="display:inline-flex;align-items:center;text-decoration:none;margin-top:6px" href="https://organiclabs.ai/work-with-us">Work with us</a>
+        </div>
+        <svg viewBox="0 0 200 200" fill="none" stroke="#D9DBE0" stroke-width="2" aria-hidden="true">
+          <ellipse cx="100" cy="100" rx="80" ry="30"/><ellipse cx="100" cy="100" rx="80" ry="30" transform="rotate(60 100 100)"/><ellipse cx="100" cy="100" rx="80" ry="30" transform="rotate(120 100 100)"/><circle cx="100" cy="100" r="6"/>
+        </svg>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<section class="news" id="newsletter">
+  <div class="wrap">
+    <div class="news-ic" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F1F5F9" stroke-width="1.6"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/><path d="M9 8h6"/></svg></div>
+    <h2>Don't Navigate This Shift Blind.<br>Subscribe to the Research</h2>
+    <p>Unsubscribe anytime. No spam. Just research.</p>
+    <form id="news-form" novalidate>
+      <label for="news-email">Get Every Research in Your Mailbox</label>
+      <div class="row"><input class="input" id="news-email" type="email" placeholder="name@email.com" autocomplete="email"><button class="btn" type="submit">Get Research</button></div>
+      <p class="news-msg" id="news-msg"></p>
+    </form>
+  </div>
+</section>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="fcols">
+      <div><h4>Industries</h4><a href="https://organiclabs.ai/industries/b2b-saas-seo-agency">B2B SaaS SEO agency</a><a href="https://organiclabs.ai/industries/b2b-seo-agency">B2B SEO agency</a><a href="https://organiclabs.ai/industries/saas-seo-agency">SaaS SEO agency</a></div>
+      <div><h4>Services</h4><a href="https://organiclabs.ai/services/full-service-seo">Full-service SEO</a><a href="https://organiclabs.ai/services/seo-content-marketing-agency">SEO content marketing agency</a></div>
+      <div><h4>Free Tools</h4><a href="../schema-validator/">Schema markup validator</a><a href="./">llms.txt generator</a><a href="../faq-schema-generator/">FAQ schema generator</a><a href="../meta-tag-generator/">Meta tag generator</a><a href="../meta-description-checker/">Meta description checker</a><a href="../url-slug-generator/">URL slug generator</a></div>
+      <div><h4>Company</h4><a href="https://organiclabs.ai/research">Research</a><a href="https://organiclabs.ai/case-studies/coldiq">Case studies</a><a href="https://organiclabs.ai/work-with-us">Work with us</a></div>
+    </div>
+    <div class="fbottom"><a class="logo" href="https://organiclabs.ai/">ORGANIC LABS</a><span>&copy; 2026 Organic Labs &middot; All rights reserved.</span></div>
+  </div>
+</footer>
+<script>
+(function(){var f=document.getElementById('news-form');if(!f)return;f.addEventListener('submit',function(e){e.preventDefault();var v=document.getElementById('news-email').value.trim(),m=document.getElementById('news-msg');if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){m.textContent='Please enter a valid email address.';return;}m.textContent='Thanks. This preview doesn\'t subscribe you yet; at launch this connects to the newsletter.';});})();
+</script>
+
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ===================== Starfield ===================== */
+(function(){var s=document.getElementById('stars');if(!s)return;var h='';for(var i=0;i<90;i++){var o=(Math.random()*.6+.15).toFixed(2),z=Math.random()<.15?2:1;h+='<i style="left:'+(Math.random()*100).toFixed(2)+'%;top:'+(Math.random()*100).toFixed(2)+'%;opacity:'+o+';width:'+z+'px;height:'+z+'px"></i>';}s.innerHTML=h;})();
+
+/* ===================== Config (keep in a config file in production) ===================== */
+var BOTS=[
+  {ua:'GPTBot',org:'OpenAI',kind:'Training'},
+  {ua:'OAI-SearchBot',org:'OpenAI',kind:'Search'},
+  {ua:'ChatGPT-User',org:'OpenAI',kind:'User fetch'},
+  {ua:'ClaudeBot',org:'Anthropic',kind:'Training'},
+  {ua:'Claude-SearchBot',org:'Anthropic',kind:'Search'},
+  {ua:'PerplexityBot',org:'Perplexity',kind:'Search'},
+  {ua:'Google-Extended',org:'Google',kind:'Training (Gemini)'},
+  {ua:'Applebot-Extended',org:'Apple',kind:'Training'}
+];
+var DROP=[
+  [/\/(login|log-in|signin|sign-in|signup|sign-up|register|account|my-account|dashboard|wp-admin|wp-login)(\/|$|\?)/i,'Login and account pages'],
+  [/\/(cart|checkout|basket)(\/|$|\?)/i,'Cart and checkout'],
+  [/\/(tag|tags|category|categories|author|authors|topics?)\//i,'Tag, category and author archives'],
+  [/\/page\/\d+\/?$|[?&](page|p)=\d+/i,'Pagination'],
+  [/\/search(\/|$|\?)|[?&](s|q)=/i,'Search pages'],
+  [/thank-?you|\/thanks(\/|$)|\/confirmation(\/|$)/i,'Thank-you pages'],
+  [/\/(feed|rss)(\/|$)|\.(xml|json|pdf|jpg|jpeg|png|gif|svg|webp|zip)$/i,'Feeds and files'],
+  [/[?&]utm_|\/cdn-cgi\//i,'Tracking and system URLs']
+];
+var TYPES=[
+  ['Docs',/\/(docs|documentation|api|developers?|reference|help|support|kb|knowledge-base|guides?)(\/|$)/i],
+  ['Pricing',/\/(pricing|plans)(\/|$)/i],
+  ['Product',/\/(product|products|features?|platform|solutions?|integrations?|use-cases?|compare|vs)(\/|$)/i],
+  ['Research',/\/(research|reports?|studies|study|data|benchmarks?)(\/|$)/i],
+  ['Customers',/\/(customers|case-studies|case-study|stories)(\/|$)/i],
+  ['Blog',/\/(blog|articles?|news|resources|insights|posts?|learn)(\/|$)/i],
+  ['Company',/\/(about|company|team|careers|jobs|contact|press|partners)(\/|$)/i],
+  ['Legal',/\/(legal|privacy|terms|tos|security|cookies?|gdpr|dpa|accessibility)(\/|$|-)/i]
+];
+var ORDER=['Docs','Product','Pricing','Research','Customers','Blog','Company','Pages'];
+var OPTIONAL_TYPES={Legal:1,Company:1};
+
+/* ===================== Example site ===================== */
+var EXD={
+ domain:'www.acmeflow.io',
+ name:'AcmeFlow',
+ desc:'AcmeFlow automates revenue operations workflows for B2B SaaS teams.',
+ details:'AcmeFlow connects your CRM, billing and support tools so RevOps teams can automate handoffs without code.',
+ pages:[
+  ['/','AcmeFlow | Workflow automation for RevOps','Automate revenue operations workflows across CRM, billing and support.'],
+  ['/product/workflow-builder','Workflow builder','Drag-and-drop automation across CRM, billing and support tools.'],
+  ['/product/revenue-alerts','Revenue alerts','Real-time alerts when deals, renewals or invoices need attention.'],
+  ['/integrations','Integrations','Connect Salesforce, HubSpot, Stripe, Zendesk and 40 more tools.'],
+  ['/integrations/salesforce','Salesforce integration','Two-way sync between AcmeFlow and Salesforce objects.'],
+  ['/integrations/hubspot','HubSpot integration','Trigger workflows from HubSpot deal and contact changes.'],
+  ['/pricing','Pricing','Plans from $49 per month, billed annually.'],
+  ['/docs/getting-started','Getting started','Connect your CRM and build your first workflow.'],
+  ['/docs/api','API reference','REST endpoints, authentication and rate limits.'],
+  ['/docs/webhooks','Webhooks','Receive workflow events in your own systems.'],
+  ['/docs/security','Security and SSO','SAML SSO, SCIM provisioning and data residency.'],
+  ['/research/state-of-revops-2026','State of RevOps 2026','Survey of 600 RevOps leaders on tooling and headcount.'],
+  ['/customers','Customers','How SaaS teams use AcmeFlow to cut manual RevOps work.'],
+  ['/customers/brightdesk','BrightDesk case study','How BrightDesk cut renewal handoff time by 60 percent.'],
+  ['/blog/revops-metrics','12 RevOps Metrics That Actually Predict Revenue','Twelve metrics that link RevOps work to revenue outcomes.'],
+  ['/blog/crm-hygiene-checklist','CRM Hygiene Checklist','A monthly checklist to keep CRM data clean.'],
+  ['/blog/lead-routing-guide','Lead Routing Guide','How to route inbound leads fairly and fast.'],
+  ['/blog/renewal-playbook','Renewal Playbook','A step-by-step playbook for SaaS renewals.'],
+  ['/blog/page/2','Blog page 2',''],
+  ['/blog/tag/revops','RevOps archive',''],
+  ['/blog/author/priya-shah','Priya Shah',''],
+  ['/about','About AcmeFlow','Who we are and why we built AcmeFlow.'],
+  ['/careers','Careers','Open roles at AcmeFlow.'],
+  ['/contact','Contact','Talk to sales or support.'],
+  ['/legal/privacy','Privacy policy',''],
+  ['/legal/terms','Terms of service',''],
+  ['/login','Log in',''],
+  ['/signup','Sign up',''],
+  ['/thank-you','Thank you',''],
+  ['/search?q=salesforce','Search','']
+ ],
+ text:{
+  '/product/workflow-builder':'Build automations across your CRM, billing and support stack with a drag-and-drop canvas. Triggers include deal stage changes, invoice events and ticket updates. Actions include field updates, Slack alerts and task creation.',
+  '/pricing':'Starter: $49 per month, billed annually, up to 5 workflows. Growth: $199 per month, unlimited workflows, Salesforce and HubSpot sync. Enterprise: custom pricing, SSO, SCIM and data residency.',
+  '/docs/getting-started':'1. Connect your CRM from Settings > Integrations. 2. Choose a trigger, such as a deal moving to Closed Won. 3. Add actions and test with a sample record. 4. Turn the workflow on.',
+  '/docs/api':'Base URL: https://api.acmeflow.io/v1. Authenticate with a bearer token from Settings > API keys. Rate limit: 600 requests per minute per workspace. Endpoints: /workflows, /runs, /events.'
+ },
+ robots:'User-agent: *\nDisallow: /login\nDisallow: /search\n\nUser-agent: GPTBot\nDisallow: /\n\nUser-agent: Google-Extended\nDisallow: /\n\nSitemap: https://www.acmeflow.io/sitemap.xml',
+ linkStatus:{'/integrations/hubspot':['warn','301 redirect to /integrations'],'/customers/brightdesk':['fail','404 Not Found']},
+ rawHtml:[['/', 'pass','Main content is in the raw HTML'],['/pricing','fail','Plans table only appears after JavaScript runs'],['/docs/getting-started','pass','Main content is in the raw HTML'],['/product/workflow-builder','pass','Main content is in the raw HTML']]
+};
+
+/* ===================== Helpers ===================== */
+var $=function(id){return document.getElementById(id);};
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function toast(m){var t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(function(){t.classList.remove('show');},2000);}
+function titleCase(s){return s.replace(/[-_]+/g,' ').replace(/\s+/g,' ').trim().replace(/\b([a-z])/g,function(m){return m.toUpperCase();}).replace(/\b(Api|Sso|Faq|Crm|Seo|Saas|B2b|Ai)\b/g,function(m){return m.toUpperCase();});}
+function cleanDomain(d){return String(d||'').trim().replace(/^https?:\/\//i,'').replace(/\/.*$/,'').toLowerCase();}
+function siteNameFrom(d){var h=cleanDomain(d).replace(/^www\./,'');return titleCase(h.split('.')[0]||'');}
+function rateOk(){try{var k='ol_llms_runs',n=Date.now(),a=JSON.parse(localStorage.getItem(k)||'[]').filter(function(t){return n-t<3600000;});if(a.length>=20)return false;a.push(n);localStorage.setItem(k,JSON.stringify(a));}catch(e){}return true;}
+function copy(text,msg){try{navigator.clipboard.writeText(text).then(function(){toast(msg);},function(){fb(text,msg);});}catch(e){fb(text,msg);}}
+function fb(text,msg){var t=document.createElement('textarea');t.value=text;t.style.position='fixed';t.style.opacity='0';document.body.appendChild(t);t.select();try{document.execCommand('copy');toast(msg);}catch(e){toast('Copy failed. Select the text and copy it manually.');}t.remove();}
+function download(name,text){
+  try{var b=new Blob([text],{type:'text/plain;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},500);}catch(e){}
+  copy(text,name+' copied. If no download started, paste it into a new file.');
+}
+
+/* ===================== Tabs ===================== */
+document.querySelectorAll('.tabs button').forEach(function(b){b.addEventListener('click',function(){setTab(b.dataset.tab);});});
+function setTab(t){document.querySelectorAll('.tabs button').forEach(function(x){x.setAttribute('aria-selected',x.dataset.tab===t?'true':'false');});$('panel-gen').hidden=t!=='gen';$('panel-chk').hidden=t!=='chk';}
+document.querySelectorAll('[data-goto]').forEach(function(a){a.addEventListener('click',function(){setTab(a.dataset.goto);});});
+document.querySelectorAll('#groupby button').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('#groupby button').forEach(function(x){x.classList.toggle('on',x===b);});if(STATE.pages)rebuild();});});
+function groupBy(){return document.querySelector('#groupby button.on').dataset.v;}
+
+/* ===================== Input parsing ===================== */
+function parseUrlInput(text,domain){
+  var t=text.trim(),items=[];
+  if(/<urlset|<sitemapindex|<loc>/i.test(t)){
+    var re=/<loc>\s*([^<\s]+)\s*<\/loc>/gi,m;while((m=re.exec(t)))items.push({url:m[1].replace(/&amp;/g,'&')});
+    if(/<sitemapindex/i.test(t))STATE.nestedNote=true;
+  } else {
+    t.split(/\r?\n/).forEach(function(l){l=l.trim();if(!l||l.charAt(0)==='#')return;var p=l.split(/\s*\|\s*/);var u=p[0];
+      if(!/^https?:\/\//i.test(u)){if(u.charAt(0)==='/'&&domain)u='https://'+domain+u;else if(/^[\w.-]+\.[a-z]{2,}(\/|$)/i.test(u))u='https://'+u;else return;}
+      items.push({url:u,title:p[1]||'',desc:p[2]||''});});
+  }
+  return items;
+}
+function pathOf(u){try{var x=new URL(u);return(x.pathname||'/')+(x.search||'');}catch(e){return u;}}
+function hostOf(u){try{return new URL(u).host.toLowerCase();}catch(e){return'';}}
+
+/* ===================== Generator ===================== */
+var STATE={};
+function generate(items,opts){
+  var dropped={},kept=[],seen={},host=opts.domain?cleanDomain(opts.domain):(items[0]?hostOf(items[0].url):'');
+  var bare=host.replace(/^www\./,'');
+  items.forEach(function(it){
+    var u=it.url.replace(/#.*$/,''),h=hostOf(u);
+    if(!h){return;}
+    if(bare&&h.replace(/^www\./,'')!==bare){dropped['Other domains']=(dropped['Other domains']||0)+1;return;}
+    var key=u.replace(/\/$/,'').toLowerCase();if(seen[key]){dropped['Duplicates']=(dropped['Duplicates']||0)+1;return;}seen[key]=1;
+    var path=pathOf(u);
+    for(var i=0;i<DROP.length;i++){if(DROP[i][0].test(path)){dropped[DROP[i][1]]=(dropped[DROP[i][1]]||0)+1;return;}}
+    if(it.status&&it.status!==200){dropped['Non-200 URLs']=(dropped['Non-200 URLs']||0)+1;return;}
+    if(it.noindex){dropped['Noindex pages']=(dropped['Noindex pages']||0)+1;return;}
+    kept.push({url:u,path:path,title:it.title,desc:it.desc,text:it.text});
+  });
+  var home=null;
+  kept=kept.filter(function(p){if(p.path==='/'||p.path===''){home=p;return false;}return true;});
+  kept.forEach(function(p){
+    var t='Pages';for(var i=0;i<TYPES.length;i++)if(TYPES[i][1].test(p.path)){t=TYPES[i][0];break;}
+    p.type=t;
+    var seg=p.path.split('?')[0].split('/').filter(Boolean);
+    p.folder=seg.length>1?titleCase(seg[0]):'Pages';
+    p.depth=seg.length;
+    if(!p.title){var last=seg[seg.length-1]||'';p.title=titleCase(decodeURIComponent(last))||p.url;p.titleFromSlug=true;}
+  });
+  // rank: type order, then shallower first
+  kept.sort(function(a,b){return (ORDER.indexOf(a.type)<0?50:ORDER.indexOf(a.type))-(ORDER.indexOf(b.type)<0?50:ORDER.indexOf(b.type))||a.depth-b.depth||a.path.localeCompare(b.path);});
+  var blog=0,blogOverflow=0,final=[],legal=[];
+  kept.forEach(function(p){
+    if(p.type==='Blog'){blog++;if(blog>opts.blogcap){blogOverflow++;return;}}
+    final.push(p);
+  });
+  if(blogOverflow)dropped['Blog posts over your cap']=blogOverflow;
+  var capOverflow=Math.max(0,final.length-opts.maxp);
+  if(capOverflow){final=final.slice(0,opts.maxp);dropped['Over your page limit']=capOverflow;}
+  // build sections
+  var secs={},secOrder=[];
+  final.forEach(function(p){
+    var name=opts.group==='folder'?p.folder:p.type;
+    if(OPTIONAL_TYPES[p.type]&&opts.optional)name='Optional';
+    if(p.type==='Legal'&&!opts.optional){dropped['Legal pages (Optional section off)']=(dropped['Legal pages (Optional section off)']||0)+1;return;}
+    if(!secs[name]){secs[name]=[];secOrder.push(name);}
+    secs[name].push({title:p.title,url:p.url,desc:p.desc||'',text:p.text||''});
+  });
+  if(opts.group==='type')secOrder.sort(function(a,b){return(a==='Optional'?99:ORDER.indexOf(a))-(b==='Optional'?99:ORDER.indexOf(b));});
+  else secOrder.sort(function(a,b){return a==='Optional'?1:b==='Optional'?-1:0;});
+  return{
+    name:opts.name||(home&&home.title?home.title.split(/\s*[|\u2013-]\s*/)[0]:siteNameFrom(host)),
+    summary:opts.desc||(home&&home.desc)||'',
+    details:opts.details||'',
+    sections:secOrder.map(function(n){return{name:n,links:secs[n]};}),
+    found:items.length,dropped:dropped,host:host,hasText:final.some(function(p){return p.text;})
+  };
+}
+function toMarkdown(m){
+  var out=['# '+m.name,''];
+  out.push('> '+(m.summary||'[Add a one-sentence summary of what you do and who it is for]'),'');
+  if(m.details)out.push(m.details,'');
+  m.sections.forEach(function(s){
+    if(!s.links.length)return;
+    out.push('## '+s.name);
+    s.links.forEach(function(l){out.push('- ['+l.title+']('+l.url+')'+(l.desc?': '+l.desc:''));});
+    out.push('');
+  });
+  return out.join('\n').replace(/\n+$/,'\n');
+}
+function toFull(m){
+  var out=['# '+m.name,'','> '+(m.summary||''),''];
+  m.sections.forEach(function(s){if(s.name==='Optional')return;s.links.forEach(function(l){
+    out.push('## '+l.title,'','Source: '+l.url,'');
+    out.push(l.text?l.text:(l.desc||'(Page text is fetched from the live page at generation time.)'),'');
+  });});
+  return out.join('\n');
+}
+function mdPreview(md){
+  var h='',inList=false;
+  md.split('\n').forEach(function(l){
+    var m;
+    if((m=l.match(/^-\s+\[([^\]]*)\]\(([^)]*)\)(?::\s*(.*))?$/))){if(!inList){h+='<ul>';inList=true;}h+='<li><a href="'+esc(m[2])+'" rel="noopener">'+esc(m[1])+'</a>'+(m[3]?': '+esc(m[3]):'')+'</li>';return;}
+    if(inList){h+='</ul>';inList=false;}
+    if(/^#\s/.test(l))h+='<h1>'+esc(l.slice(2))+'</h1>';
+    else if(/^##\s/.test(l))h+='<h2>'+esc(l.slice(3))+'</h2>';
+    else if(/^>\s?/.test(l))h+='<blockquote>'+esc(l.replace(/^>\s?/,''))+'</blockquote>';
+    else if(/^-\s/.test(l))h+='<ul><li>'+esc(l.slice(2))+'</li></ul>';
+    else if(l.trim())h+='<p>'+esc(l)+'</p>';
+  });
+  if(inList)h+='</ul>';
+  return h;
+}
+
+/* ===================== Generate UI ===================== */
+function readOpts(domain){
+  return{domain:domain,name:$('sitename').value.trim(),desc:$('sitedesc').value.trim(),
+    maxp:Math.min(500,Math.max(10,parseInt($('maxp').value,10)||150)),blogcap:Math.max(0,parseInt($('blogcap').value,10)||0),
+    group:groupBy(),optional:$('opt-optional').checked,full:$('opt-full').checked};
+}
+$('form-gen').addEventListener('submit',function(e){e.preventDefault();runGenerate(false);});
+$('ex-gen').addEventListener('click',function(){$('domain').value='acmeflow.io';runGenerate(true);});
+['opt-optional','opt-full'].forEach(function(id){$(id).addEventListener('change',function(){if(STATE.pages)rebuild();});});
+
+function runGenerate(isExample){
+  var note=$('gen-note');note.hidden=true;
+  var domain=cleanDomain($('domain').value),pasted=$('urls').value.trim();
+  if(!isExample&&/acmeflow\.io$/.test(domain))isExample=true;
+  if(!isExample&&!pasted){
+    if(!domain){note.hidden=false;note.innerHTML='Enter your domain, or try the example.';return;}
+    note.hidden=false;
+    note.innerHTML='<b>Live sitemap reading runs on our server</b>, which fetches robots.txt, your sitemaps and each page title and description. This preview can\'t reach other sites from your browser. For now, open <b>'+esc(domain)+'/sitemap.xml</b>, copy its contents and paste them under <a href="#" id="open-adv">Advanced</a>. Or try the example.';
+    $('open-adv').addEventListener('click',function(ev){ev.preventDefault();$('adv').open=true;$('urls').focus();});
+    return;
+  }
+  if(!rateOk()){note.hidden=false;note.innerHTML='<b>You\'ve hit 20 runs this hour.</b> Take a break and come back soon.';return;}
+  var items,opts;
+  if(isExample&&!pasted){
+    items=EXD.pages.map(function(p){return{url:'https://'+EXD.domain+p[0],title:p[1],desc:p[2],text:EXD.text[p[0]]||''};});
+    opts=readOpts(EXD.domain);opts.name=opts.name||EXD.name;opts.desc=opts.desc||EXD.desc;opts.details=EXD.details;
+    STATE.example=true;
+  } else {
+    STATE.nestedNote=false;
+    items=parseUrlInput(pasted,domain);
+    if(!items.length){note.hidden=false;note.innerHTML='We couldn\'t find any URLs in what you pasted. Paste sitemap XML or one URL per line.';return;}
+    opts=readOpts(domain||hostOf(items[0].url));STATE.example=false;
+  }
+  STATE.items=items;STATE.domain=opts.domain;STATE.pages=true;STATE.manual=false;
+  var steps=['Read robots.txt and sitemap'+(isExample?'s (2 found)':''),'Dropped login, cart, archive, pagination and search pages','Ranked product, pricing, docs and research first; capped blog posts','Wrote descriptions from page titles and meta descriptions','Formatted to the llmstxt.org spec'];
+  var P=$('progress');P.hidden=false;P.innerHTML=steps.map(function(s){return'<li><span class="ic">&middot;</span>'+esc(s)+'</li>';}).join('');
+  $('gen-out').innerHTML='';
+  var lis=P.querySelectorAll('li'),i=0;
+  (function tick(){if(i<lis.length){lis[i].classList.add('done');lis[i].querySelector('.ic').innerHTML='&#10003;';i++;setTimeout(tick,180);}else{rebuild();}})();
+}
+function rebuild(keepModel){
+  if(!keepModel){var opts=readOpts(STATE.domain);if(STATE.example){opts.name=opts.name||EXD.name;opts.desc=opts.desc||EXD.desc;opts.details=EXD.details;}STATE.model=generate(STATE.items,opts);STATE.full=opts.full;}
+  STATE.md=toMarkdown(STATE.model);STATE.manual=false;
+  renderGen();
+}
+function linkCount(md){return(md.match(/^-\s+\[[^\]]*\]\([^)]*\)/gm)||[]).length;}
+function renderGen(){
+  var m=STATE.model,O=$('gen-out');
+  var dr=Object.keys(m.dropped).map(function(k){return m.dropped[k]+' '+k.toLowerCase();});
+  var incl=m.sections.reduce(function(a,s){return a+s.links.length;},0);
+  var fullOk=STATE.full&&m.hasText;
+  var h='<p class="dropped"><b style="color:var(--text)">'+m.found+' URLs found, '+incl+' included.</b>'+(dr.length?' Dropped: '+esc(dr.join(', '))+'.':'')+(STATE.nestedNote?' This is a sitemap index: paste each child sitemap too, or use the live tool, which follows them automatically.':'')+(STATE.example?' Sample site; descriptions come from each page\'s meta description.':'')+'</p>';
+  h+='<div class="out"><div class="struct" id="struct"><h4>Sections</h4>'+structHtml(m)+'</div>'+
+    '<div class="ed"><div class="ed-bar"><span class="seg" id="view"><button type="button" class="on" data-v="md">Markdown</button><button type="button" data-v="pv">Preview</button></span>'+
+    '<button class="btn-ghost" id="g-copy">Copy</button></div>'+
+    '<label for="md" style="position:absolute;left:-9999px">llms.txt editor</label><textarea id="md" spellcheck="false">'+esc(STATE.md)+'</textarea><div class="preview" id="pv" hidden></div>'+
+    '<div class="meta" id="mdmeta"></div>'+
+    '<div class="btns"><button class="btn btn-sm" id="g-dl">Download llms.txt</button>'+(STATE.full?'<button class="btn-ghost" id="g-full"'+(fullOk?'':' disabled title="Needs page text"')+'>Download llms-full.txt</button>':'')+'<button class="btn-ghost" id="g-val">Validate this file</button></div>'+
+    (STATE.full&&!fullOk?'<p class="meta">llms-full.txt needs the text of each page. The live tool fetches it; pasted URL lists don\'t include it.</p>':'')+
+    '</div></div>';
+  h+='<div class="platform" id="platform"><h4>Upload it to your site <select id="plat" aria-label="Platform">'+Object.keys(PLAT).map(function(k){return'<option'+(k==='Next.js'?' selected':'')+'>'+k+'</option>';}).join('')+'</select><span class="meta" style="margin:0">'+(STATE.example?'Detected: Next.js':'Pick your platform')+'</span></h4><ol id="plat-steps"></ol><p class="meta">More detail in <a href="#install">How to add llms.txt to your website</a>.</p></div>';
+  O.innerHTML=h;
+  wireGen();updateMeta();renderPlat();
+  setTakeaways('gen');
+}
+function structHtml(m){
+  return m.sections.map(function(s,si){
+    return'<div class="sec"><div class="sec-h"><b title="'+esc(s.name)+'">'+esc(s.name)+' ('+s.links.length+')</b>'+
+      '<button class="ib" data-up="'+si+'" title="Move up" aria-label="Move '+esc(s.name)+' up">&uarr;</button><button class="ib" data-down="'+si+'" title="Move down" aria-label="Move '+esc(s.name)+' down">&darr;</button><button class="ib" data-delsec="'+si+'" title="Remove section" aria-label="Remove section '+esc(s.name)+'">&times;</button></div>'+
+      s.links.map(function(l,li){return'<div class="lk"><span title="'+esc(l.url)+'">'+esc(l.title)+'</span><button class="ib" data-dellink="'+si+':'+li+'" aria-label="Remove '+esc(l.title)+'">&times;</button></div>';}).join('')+
+      '<div class="addlink"><input placeholder="Add URL" data-addurl="'+si+'" aria-label="Add a URL to '+esc(s.name)+'"><button class="ib" data-add="'+si+'" aria-label="Add link">+</button></div></div>';
+  }).join('')+'<div class="addlink"><input id="newsec" placeholder="New section name" aria-label="New section name"><button class="ib" id="addsec" aria-label="Add section">+</button></div>';
+}
+function structChanged(){
+  if(STATE.manual&&!confirmBox())return false;
+  rebuild(true);return true;
+}
+function confirmBox(){toast('Your manual edits were replaced by the section changes');return true;}
+function wireGen(){
+  var S=$('struct');
+  S.addEventListener('click',function(e){
+    var b=e.target.closest('button');if(!b)return;var m=STATE.model,d=b.dataset;
+    if(d.up!=null){var i=+d.up;if(i>0){var t=m.sections[i];m.sections[i]=m.sections[i-1];m.sections[i-1]=t;structChanged();}}
+    else if(d.down!=null){var j=+d.down;if(j<m.sections.length-1){var t2=m.sections[j];m.sections[j]=m.sections[j+1];m.sections[j+1]=t2;structChanged();}}
+    else if(d.delsec!=null){m.sections.splice(+d.delsec,1);structChanged();}
+    else if(d.dellink){var p=d.dellink.split(':');m.sections[+p[0]].links.splice(+p[1],1);structChanged();}
+    else if(d.add!=null){var inp=S.querySelector('[data-addurl="'+d.add+'"]'),u=inp.value.trim();if(!u)return;if(!/^https?:\/\//.test(u))u='https://'+(u.charAt(0)==='/'?STATE.model.host+u:u);
+      var seg=pathOf(u).split('?')[0].split('/').filter(Boolean);m.sections[+d.add].links.push({title:titleCase(seg[seg.length-1]||'Home'),url:u,desc:''});structChanged();}
+    else if(b.id==='addsec'){var n=$('newsec').value.trim();if(!n)return;m.sections.push({name:n,links:[]});structChanged();}
+  });
+  S.addEventListener('keydown',function(e){if(e.key==='Enter'&&e.target.tagName==='INPUT'){e.preventDefault();var nb=e.target.nextElementSibling;if(nb)nb.click();}});
+  $('md').addEventListener('input',function(){STATE.md=$('md').value;STATE.manual=true;updateMeta();});
+  document.querySelectorAll('#view button').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('#view button').forEach(function(x){x.classList.toggle('on',x===b);});var pv=b.dataset.v==='pv';$('md').hidden=pv;$('pv').hidden=!pv;if(pv)$('pv').innerHTML=mdPreview($('md').value);});});
+  $('g-copy').addEventListener('click',function(){copy($('md').value,'llms.txt copied');});
+  $('g-dl').addEventListener('click',function(){download('llms.txt',$('md').value);});
+  if($('g-full'))$('g-full').addEventListener('click',function(){download('llms-full.txt',toFull(STATE.model));});
+  $('g-val').addEventListener('click',function(){setTab('chk');$('chk-adv').open=true;$('chk-file').value=$('md').value;if(STATE.example)$('chk-robots').value=EXD.robots;runCheck({paste:true,fromGen:true});});
+  $('plat').addEventListener('change',renderPlat);
+}
+function updateMeta(){var v=$('md').value;$('mdmeta').textContent=v.length.toLocaleString()+' characters · '+linkCount(v)+' links · '+(new TextEncoder().encode(v).length/1024).toFixed(1)+' KB'+(STATE.manual?' · edited by hand':'');}
+var PLAT={
+  'WordPress':['Download llms.txt.','Upload it to your site root (the folder with wp-config.php) via SFTP or your host\'s file manager.','Or turn on llms.txt in your SEO plugin if it offers it (Yoast does), then paste your edited version.'],
+  'Shopify':['Shopify doesn\'t allow files at the domain root.','Upload llms.txt under Content > Files and copy its URL.','Add a URL redirect from /llms.txt to that file (Online Store > Navigation > URL Redirects), or use an app that serves it.'],
+  'Webflow':['Webflow doesn\'t allow root file uploads.','Upload llms.txt as an asset and copy its URL.','Add a 301 redirect from /llms.txt in Site settings, or serve it through a proxy such as a Cloudflare Worker.'],
+  'Next.js':['Save the file as public/llms.txt in your repo.','Deploy. Next.js serves files in /public at the root.','Open yoursite.com/llms.txt to confirm it loads as plain text.'],
+  'Nuxt':['Save the file as public/llms.txt.','Deploy. Nuxt serves /public at the root.','Open yoursite.com/llms.txt to confirm it loads.'],
+  'Framer':['Framer doesn\'t serve custom root files directly.','Host the file elsewhere and redirect /llms.txt to it, or put a proxy in front of the site.','Check the result with the checker.'],
+  'Static / cPanel':['Upload llms.txt to public_html (or your web root).','Open yoursite.com/llms.txt to confirm it loads.']
+};
+function renderPlat(){var k=$('plat').value;$('plat-steps').innerHTML=PLAT[k].map(function(s){return'<li>'+esc(s)+'</li>';}).join('')+'<li>Run the <a href="#" id="plat-chk">checker</a> to confirm it\'s live.</li>';$('plat-chk').addEventListener('click',function(e){e.preventDefault();$('g-val').click();});}
+
+/* ===================== Checker ===================== */
+function robotsAllows(robots,ua,path){
+  var groups=[],cur=null,lastWasUA=false;
+  robots.split(/\r?\n/).forEach(function(line){
+    line=line.replace(/#.*$/,'').trim();if(!line)return;var m=line.match(/^([\w-]+)\s*:\s*(.*)$/);if(!m)return;
+    var k=m[1].toLowerCase(),v=m[2].trim();
+    if(k==='user-agent'){if(!lastWasUA||!cur){cur={uas:[],rules:[]};groups.push(cur);}cur.uas.push(v.toLowerCase());lastWasUA=true;}
+    else{lastWasUA=false;if(!cur)return;if(k==='allow'||k==='disallow')cur.rules.push({allow:k==='allow',path:v});}
+  });
+  var u=ua.toLowerCase(),g=groups.filter(function(x){return x.uas.indexOf(u)>-1;});
+  var matched='own';if(!g.length){g=groups.filter(function(x){return x.uas.indexOf('*')>-1;});matched='*';}
+  if(!g.length)return{allowed:true,via:'no rules'};
+  var rules=[].concat.apply([],g.map(function(x){return x.rules;})),best=null;
+  rules.forEach(function(r){if(r.path==='')return;var re=new RegExp('^'+r.path.replace(/[.+?^${}()|[\]\\]/g,'\\$&').replace(/\*/g,'.*').replace(/\\\$$/,'$'));
+    if(re.test(path)){if(!best||r.path.length>best.path.length||(r.path.length===best.path.length&&r.allow))best=r;}});
+  return{allowed:!best||best.allow,via:matched==='own'?'User-agent: '+ua:'User-agent: *',rule:best?(best.allow?'Allow: ':'Disallow: ')+best.path:''};
+}
+function checkFormat(txt){
+  var res=[],lines=txt.split(/\r?\n/),add=function(st,m,f){res.push({st:st,m:m,f:st==='pass'?'':(f||'')});};
+  var bytes=new TextEncoder().encode(txt).length;
+  var first=lines.findIndex(function(l){return l.trim()!=='';});
+  var h1s=lines.filter(function(l){return /^#\s+\S/.test(l);});
+  if(first>-1&&/^#\s+\S/.test(lines[first])&&h1s.length===1)add('pass','One H1 at the top ("'+esc(h1s[0].slice(2).trim())+'")');
+  else if(!h1s.length)add('fail','No H1 title','Start the file with "# Your Site Name".');
+  else if(h1s.length>1)add('fail',h1s.length+' H1 headings found','Keep exactly one H1; use ## for sections.');
+  else add('fail','The H1 isn\'t the first line','Move "# Your Site Name" to the top of the file.');
+  var firstH2=lines.findIndex(function(l){return /^##\s/.test(l);});
+  var bq=lines.slice(0,firstH2<0?lines.length:firstH2).some(function(l){return /^>\s?\S/.test(l);});
+  add(bq?'pass':'warn',bq?'Blockquote summary present':'No blockquote summary','Add "> One sentence on what you do" under the H1.');
+  if(/\[Add a one-sentence summary/.test(txt))add('warn','Summary is still a placeholder','Replace the bracketed text with your real one-line summary.');
+  var h2=lines.filter(function(l){return /^##\s+\S/.test(l);});
+  add(h2.length?'pass':'fail',h2.length?h2.length+' H2 sections':'No H2 sections','Group your links under "## Section" headings.');
+  var opt=h2.map(function(l){return l.slice(3).trim().toLowerCase();}).indexOf('optional');
+  if(opt>-1&&opt!==h2.length-1)add('warn','"Optional" isn\'t the last section','Move ## Optional to the end so tools can skip it.');
+  var linkRe=/^-\s+\[([^\]]+)\]\(([^)\s]+)\)(?::\s*(.+))?$/,links=[],bad=[],rel=[],dup=[],seen={},longD=0;
+  lines.forEach(function(l,i){var t=l.trim();if(!/^[-*]\s/.test(t))return;var m=t.match(linkRe);if(!m){bad.push(i+1);return;}
+    links.push(m[2]);if(!/^https?:\/\//i.test(m[2]))rel.push(m[2]);var k=m[2].replace(/\/$/,'').toLowerCase();if(seen[k])dup.push(m[2]);seen[k]=1;if(m[3]&&m[3].split(/\s+/).length>20)longD++;});
+  add(links.length?(bad.length?'warn':'pass'):'fail',links.length?links.length+' valid markdown link'+(links.length===1?'':'s')+(bad.length?', '+bad.length+' malformed list items (lines '+bad.slice(0,5).join(', ')+')':''):'No markdown links found','Write links as "- [Title](https://...): description".');
+  if(rel.length)add('fail',rel.length+' relative URL'+(rel.length>1?'s':'')+' ('+esc(rel.slice(0,2).join(', '))+')','Use full https:// URLs.');
+  if(dup.length)add('warn',dup.length+' duplicate link'+(dup.length>1?'s':''),'Remove repeats so each page appears once.');
+  if(longD)add('warn',longD+' description'+(longD>1?'s are':' is')+' longer than 20 words','Keep descriptions short (about 15 words).');
+  add(/<\/?[a-z][a-z0-9]*(\s[^>]*)?>/i.test(txt)?'fail':'pass',/<\/?[a-z][a-z0-9]*(\s[^>]*)?>/i.test(txt)?'HTML tags found':'No HTML','Use plain markdown only.');
+  add(bytes>100*1024?'warn':'pass','File size '+(bytes/1024).toFixed(1)+' KB',bytes>100*1024?'Trim it to your key pages; move full text into llms-full.txt.':'');
+  return{res:res,links:links};
+}
+function overall(list){if(!list.length)return'na';if(list.some(function(c){return c.st==='fail';}))return'fail';if(list.some(function(c){return c.st==='warn';}))return'warn';if(list.every(function(c){return c.st==='na';}))return'na';return'pass';}
+
+$('form-chk').addEventListener('submit',function(e){e.preventDefault();runCheck({domain:cleanDomain($('chk-domain').value)});});
+$('ex-chk').addEventListener('click',function(){$('chk-domain').value='acmeflow.io';runCheck({domain:'acmeflow.io'});});
+$('chk-paste-go').addEventListener('click',function(){runCheck({paste:true});});
+
+function runCheck(o){
+  var note=$('chk-note');note.hidden=true;
+  var example=o.domain&&/acmeflow\.io$/.test(o.domain);
+  var file,robots,live=false;
+  if(o.paste){file=$('chk-file').value;robots=$('chk-robots').value;if(!file.trim()){toast('Paste your llms.txt first');return;}live=STATE.example&&o.fromGen;}
+  else if(example){
+    var items=EXD.pages.map(function(p){return{url:'https://'+EXD.domain+p[0],title:p[1],desc:p[2]};});
+    var m=generate(items,{domain:EXD.domain,name:EXD.name,desc:EXD.desc,details:EXD.details,maxp:150,blogcap:20,group:'type',optional:true});
+    file=toMarkdown(m);robots=EXD.robots;live=true;$('chk-file').value=file;$('chk-robots').value=robots;
+  } else {
+    if(!o.domain){note.hidden=false;note.innerHTML='Enter a domain, paste your file, or try the example.';return;}
+    note.hidden=false;
+    note.innerHTML='<b>Live checks run on our server</b>: we fetch '+esc(o.domain)+'/llms.txt and robots.txt, test every link and load key pages as raw HTML. This preview can\'t reach other sites from your browser. Paste your file and robots.txt under <a href="#" id="open-cadv">"Or paste your file"</a> to run the format and AI access checks now.';
+    $('open-cadv').addEventListener('click',function(e){e.preventDefault();$('chk-adv').open=true;$('chk-file').focus();});
+    return;
+  }
+  if(!rateOk()){note.hidden=false;note.innerHTML='<b>You\'ve hit 20 runs this hour.</b> Take a break and come back soon.';return;}
+  var F=checkFormat(file);
+  // Links
+  var L=[];
+  if(live){
+    var bad=0;F.links.forEach(function(u){var p=pathOf(u),s=EXD.linkStatus[p];if(s){bad++;L.push({st:s[0],m:esc(p)+': '+s[1],f:s[0]==='fail'?'Remove the link or restore the page.':'Link to the final URL directly.'});}});
+    var allowAll=robots?F.links.filter(function(u){return!robotsAllows(robots,'*',pathOf(u)).allowed;}):[];
+    allowAll.forEach(function(u){L.push({st:'fail',m:esc(pathOf(u))+' is blocked by robots.txt',f:'Remove it from llms.txt or allow it in robots.txt.'});});
+    L.unshift({st:bad||allowAll.length?'warn':'pass',m:(F.links.length-bad-allowAll.length)+' of '+F.links.length+' links return 200 with no redirect',f:''});
+    L.push({st:'pass',m:'No noindex pages linked',f:''});
+  } else L.push({st:'na',m:'Link status not checked',f:'Enter your domain on the live site to test every link for 200, redirects and noindex.'});
+  // Reachability
+  var Rr=live?[{st:'pass',m:'/llms.txt returns 200 at the root',f:''},{st:'pass',m:'Served as text/plain; charset=utf-8',f:''},{st:'pass',m:'No login wall or bot challenge',f:''}]:[{st:'na',m:'Reachability not checked',f:'Enter your domain on the live site to confirm the file returns 200 as plain text with no bot challenge.'}];
+  // AI access
+  var A=[],botRows=null;
+  if(robots&&robots.trim()){
+    botRows=BOTS.map(function(b){var r=robotsAllows(robots,b.ua,'/');return{b:b,r:r};});
+    var blockedSearch=botRows.filter(function(x){return!x.r.allowed&&/Search|User/.test(x.b.kind);});
+    var blockedTrain=botRows.filter(function(x){return!x.r.allowed&&/Training/.test(x.b.kind);});
+    A.push({st:blockedSearch.length?'fail':'pass',m:blockedSearch.length?'robots.txt blocks AI search bots: '+blockedSearch.map(function(x){return x.b.ua;}).join(', '):'AI search and user-fetch bots are allowed',f:blockedSearch.length?'Allow these bots if you want to appear in AI answers. Your llms.txt can\'t help while they are blocked.':''});
+    if(blockedTrain.length)A.push({st:'warn',m:'Training crawlers blocked: '+blockedTrain.map(function(x){return x.b.ua;}).join(', '),f:'Fine if intentional. This affects model training, not AI search answers.'});
+  } else A.push({st:'na',m:'robots.txt not checked',f:'Paste your robots.txt above, or use the live site, to test 8 AI bots.'});
+  if(live)EXD.rawHtml.forEach(function(r){A.push({st:r[1],m:'Raw HTML, '+esc(r[0])+': '+esc(r[2]),f:r[1]==='fail'?'Render this content server-side so AI crawlers that don\'t run JavaScript can read it.':''});});
+  else A.push({st:'na',m:'Raw HTML content not checked',f:'The live check loads your homepage and 3 linked pages as raw HTML, the way AI crawlers see them.'});
+  renderCheck({F:F.res,L:L,R:Rr,A:A,botRows:botRows,live:live,example:example,domain:o.domain});
+}
+var STL={pass:'Pass',warn:'Warn',fail:'Fail',na:'Not run'};
+function chkList(list){return list.map(function(c){return'<div class="chk"><span class="pill-s s-'+c.st+'">'+STL[c.st]+'</span><div><div class="m">'+c.m+'</div>'+(c.f?'<div class="f">'+c.f+'</div>':'')+'</div></div>';}).join('');}
+function renderCheck(r){
+  STATE.check=r;
+  var R=$('results');R.style.display='block';
+  var cat=[['Format',r.F],['Links',r.L],['Reachable',r.R],['AI access',r.A]];
+  var sum=cat.map(function(c){var o=overall(c[1]);return'<div class="stat"><div class="n '+o+'">'+STL[o]+'</div><div class="l">'+c[0]+'</div></div>';}).join('');
+  var h='<div class="summary s4">'+sum+'</div>';
+  if(r.example||r.live)h+='<div class="note" style="margin-top:12px">Example result for <b>acmeflow.io</b> (sample site): link status, reachability and raw HTML results are simulated to show what the live check returns.</div>';
+  else h+='<div class="note" style="margin-top:12px">Format'+(r.botRows?' and robots.txt':'')+' checks ran on what you pasted. Link, reachability and raw HTML checks need the live check on your domain.</div>';
+  h+='<div class="actions"><button class="btn-ghost" id="c-copy">Copy fix list</button><button class="btn-ghost" id="c-again">Check another file</button><button class="btn-ghost" id="c-email">Email me this report</button></div>';
+  cat.forEach(function(c,i){
+    var o=overall(c[1]);
+    h+='<div class="card'+(o==='fail'||i===0?' open':'')+'"><div class="card-h" role="button" tabindex="0"><span class="chev">&#9656;</span><h3>'+c[0]+'</h3><span class="badge '+(o==='pass'?'b-ok':o==='warn'?'b-fix':o==='fail'?'b-dead':'b-none')+'">'+STL[o]+'</span></div><div class="card-b">'+chkList(c[1]);
+    if(c[0]==='AI access'&&r.botRows)h+='<table class="bots"><thead><tr><th>Bot</th><th>Owner</th><th>Type</th><th>Homepage</th><th>Rule</th></tr></thead><tbody>'+r.botRows.map(function(x){return'<tr><td>'+x.b.ua+'</td><td>'+x.b.org+'</td><td>'+x.b.kind+'</td><td><span class="pill-s '+(x.r.allowed?'s-pass':'s-fail')+'">'+(x.r.allowed?'Allowed':'Blocked')+'</span></td><td style="color:var(--muted)">'+esc(x.r.rule||x.r.via)+'</td></tr>';}).join('')+'</tbody></table>';
+    h+='</div></div>';
+  });
+  h+='<div class="lead" id="lead"><div><h3>Email me this report and a monthly re-check</h3><p>We\'ll re-run the checks each month and tell you if anything breaks.</p><form id="lead-form" novalidate><div class="row"><input class="input" type="email" id="lead-email" placeholder="name@email.com" required><button class="btn" type="submit">Send report</button></div><label class="check"><input type="checkbox" checked> Also send me Organic Labs research</label><div id="lead-msg" class="free"></div></form></div>'+
+    '<div><h3>Want a full AI visibility audit?</h3><p>llms.txt is the easy part. We look at crawler access, rendering and whether your pages are built to be quoted.</p><a class="btn-ghost" style="display:inline-block;text-decoration:none" href="#audit">Learn more</a></div></div>';
+  R.innerHTML=h;
+  R.querySelectorAll('.card-h').forEach(function(hd){var f=function(){hd.parentElement.classList.toggle('open');};hd.addEventListener('click',f);hd.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();f();}});});
+  $('c-copy').addEventListener('click',function(){var out=['llms.txt check (Organic Labs)',''];cat.forEach(function(c){c[1].forEach(function(x){if(x.st==='fail'||x.st==='warn')out.push('- ['+c[0]+'] '+x.m.replace(/<[^>]+>/g,'').replace(/&quot;/g,'"').replace(/&amp;/g,'&')+(x.f?'. Fix: '+x.f.replace(/<[^>]+>/g,''):''));});});copy(out.join('\n'),'Fix list copied');});
+  $('c-again').addEventListener('click',function(){$('chk-domain').value='';$('chk-file').value='';$('chk-robots').value='';R.style.display='none';$('takeaways').hidden=true;$('tool').scrollIntoView({behavior:'smooth'});});
+  $('c-email').addEventListener('click',function(){$('lead').scrollIntoView({behavior:'smooth',block:'center'});$('lead-email').focus({preventScroll:true});});
+  $('lead-form').addEventListener('submit',function(e){e.preventDefault();var v=$('lead-email').value.trim(),m=$('lead-msg');if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){m.textContent='Please enter a valid email address.';return;}m.textContent='Thanks. This preview doesn\'t send email yet. At launch, the report goes to '+v+'.';});
+  setTakeaways('chk');
+  R.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* ===================== Key Takeaways (made, valid, AI reach) ===================== */
+function setTakeaways(mode){
+  var T=$('takeaways'),ul=$('tk'),items=[];
+  if(mode==='gen'){
+    var n=linkCount(STATE.md),s=STATE.model.sections.filter(function(x){return x.links.length;}).length;
+    var F=checkFormat(STATE.md),o=overall(F.res);
+    items.push('<b>You made:</b> an llms.txt with '+n+' links in '+s+' sections'+(STATE.full&&STATE.model.hasText?', plus llms-full.txt':'')+'.');
+    items.push('<b>Valid?</b> '+(o==='pass'?'The format passes the llmstxt.org checks.':o==='warn'?'Mostly. Fix the warnings shown in the checker before you upload.':'Not yet. Run "Validate this file" to see what to fix.'));
+    items.push('<b>Can AI reach your site?</b> The file alone doesn\'t tell you. Click "Validate this file" to test robots.txt rules for 8 AI bots and your raw HTML.');
+  } else {
+    var r=STATE.check,fo=overall(r.F),ao=overall(r.A);
+    items.push('<b>You checked:</b> an llms.txt with '+(r.F.filter(function(x){return /valid markdown links/.test(x.m);}).map(function(x){return x.m.split(' ')[0];})[0]||0)+' links.');
+    items.push('<b>Valid?</b> '+(fo==='pass'?'Yes. The format follows the llmstxt.org spec.':fo==='warn'?'Mostly. Fix the warnings above.':'No. Fix the failed format checks above.'));
+    items.push('<b>Can AI reach your site?</b> '+(ao==='fail'?'Not fully. Fix the AI access issues first; an llms.txt can\'t help while bots are blocked or content needs JavaScript.':ao==='warn'?'Yes for AI search, with caveats noted above.':ao==='pass'?'Yes. AI search bots are allowed and your content is in the raw HTML.':'Not tested yet. Paste your robots.txt or run the live check.'));
+  }
+  ul.innerHTML=items.map(function(i){return'<li>'+i+'</li>';}).join('');T.hidden=false;
+}
+</script>
+<script id="gh-local-links">
+/* On GitHub Pages: point links to pages in this repo at their local copies. Does nothing on organiclabs.ai. */
+(function(){
+  if(/(^|\.)organiclabs\.ai$/.test(location.hostname))return;
+  var B='../../',L=['/services', '/services/ai-search-optimization', '/services/b2b-seo-audit', '/services/fractional-seo-consultant', '/services/saas-seo-consultant', '/tools', '/tools/faq-schema-generator', '/tools/llms-txt-generator', '/tools/meta-description-checker', '/tools/meta-tag-generator', '/tools/schema-validator', '/tools/url-slug-generator'];
+  function run(){document.querySelectorAll('a[href^="https://organiclabs.ai/"]').forEach(function(a){
+    var u=a.getAttribute('href'),m=u.match(/^https:\/\/organiclabs\.ai(\/[^#?]*)?(#.*)?$/);if(!m)return;
+    var p=(m[1]||'/').replace(/\/$/,'')||'/';if(L.indexOf(p)>-1)a.setAttribute('href',B+p.slice(1)+'/'+(m[2]||''));});}
+  run();setTimeout(run,0);
+})();
+</script>
+</body>
+</html>
